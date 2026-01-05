@@ -3,9 +3,9 @@ import styles from './Header.module.css';
 
 function Header() {
   return ( 
-    <header>
-      <nav>
-        <ul>
+    <header className={styles.header}>
+      <nav className={styles.nav}>
+        <ul className={styles.menuList}>
           <li>
             <a href="#home">Accueil</a>
           </li>

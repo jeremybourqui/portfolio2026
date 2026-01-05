@@ -1,1 +1,13 @@
 /* Projects component styles */
+
+.projects {
+  padding: 24px;
+  background-color: var(--color-accent-weak);
+  color: var(--color-background);
+}
+
+.projectsGrid {
+  display: flex;
+  gap: 16px;
+  flex: 1 1 200px;
+}
