@@ -1,1 +1,18 @@
 /* ProjectCard component styles */
+
+  .projectCard {
+    --outer-radius: 24px;
+    --padding: 8px;
+    
+    border-radius: var(--outer-radius);
+    padding: var(--padding);
+    background-color: var(--color-background-strong);
+    color: var(--color-background);
+    flex: 1 1 200px;
+  }
+  
+  .imgWrapper {
+    border-radius: calc(
+      var(--outer-radius) - var(--padding)
+    );
+  }
