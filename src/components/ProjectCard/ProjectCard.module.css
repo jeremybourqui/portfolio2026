@@ -2,7 +2,7 @@
 
   .projectCard {
     --outer-radius: 24px;
-    --padding: 8px;
+    --padding: 16px;
     
     border-radius: var(--outer-radius);
     padding: var(--padding);
@@ -11,8 +11,10 @@
     flex: 1 1 200px;
   }
   
-  .imgWrapper {
-    border-radius: calc(
-      var(--outer-radius) - var(--padding)
-    );
+  .img {
+    border-radius: calc(var(--outer-radius) - var(--padding));
+  }
+
+  h3, p, a {
+    margin: 8px 0;
   }

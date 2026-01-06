@@ -204,8 +204,13 @@
             </div>
 
             <div class="control-group">
-                <label for="cellSize">Cell Size (px):</label>
-                <input type="number" id="cellSize" min="10" max="100" value="40">
+                <label for="cellWidth">Cell Width (px):</label>
+                <input type="number" id="cellWidth" min="10" max="200" value="40">
+            </div>
+
+            <div class="control-group">
+                <label for="cellHeight">Cell Height (px):</label>
+                <input type="number" id="cellHeight" min="10" max="200" value="40">
             </div>
 
             <div class="control-group">
@@ -252,21 +257,23 @@
         let gridData = {
             rows: 5,
             columns: 5,
-            cellSize: 40
+            cellWidth: 40,
+            cellHeight: 40
         };
 
         function generateGrid() {
             const rows = parseInt(document.getElementById('rows').value);
             const columns = parseInt(document.getElementById('columns').value);
-            const cellSize = parseInt(document.getElementById('cellSize').value);
+            const cellWidth = parseInt(document.getElementById('cellWidth').value);
+            const cellHeight = parseInt(document.getElementById('cellHeight').value);
 
-            gridData = { rows, columns, cellSize };
+            gridData = { rows, columns, cellWidth, cellHeight };
             selectedCells.clear();
 
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${columns}, ${cellSize}px)`;
-            grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+            grid.style.gridTemplateColumns = `repeat(${columns}, ${cellWidth}px)`;
+            grid.style.gridTemplateRows = `repeat(${rows}, ${cellHeight}px)`;
 
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < columns; col++) {
@@ -274,8 +281,8 @@
                     cell.className = 'cell';
                     cell.dataset.row = row;
                     cell.dataset.col = col;
-                    cell.style.width = `${cellSize}px`;
-                    cell.style.height = `${cellSize}px`;
+                    cell.style.width = `${cellWidth}px`;
+                    cell.style.height = `${cellHeight}px`;
                     
                     cell.onclick = () => toggleCell(row, col, cell);
                     grid.appendChild(cell);
@@ -309,7 +316,7 @@
 
             const color = document.getElementById('color').value;
             const radius = parseInt(document.getElementById('radius').value);
-            const { cellSize, rows, columns } = gridData;
+            const { cellWidth, cellHeight, rows, columns } = gridData;
 
             // Convert selected cells to grid
             const grid = Array(rows).fill(null).map(() => Array(columns).fill(false));
@@ -319,10 +326,10 @@
             });
 
             // Generate path with rounded corners
-            const path = generateRoundedPath(grid, cellSize, radius);
+            const path = generateRoundedPath(grid, cellWidth, cellHeight, radius);
             
-            const svgWidth = columns * cellSize;
-            const svgHeight = rows * cellSize;
+            const svgWidth = columns * cellWidth;
+            const svgHeight = rows * cellHeight;
 
             const svgCode = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
   <path d="${path}" fill="${color}"/>
@@ -336,7 +343,7 @@
             document.getElementById('codeOutput').textContent = svgCode;
         }
 
-        function generateRoundedPath(grid, cellSize, radius) {
+        function generateRoundedPath(grid, cellWidth, cellHeight, radius) {
             const rows = grid.length;
             const cols = grid[0].length;
             
@@ -347,25 +354,25 @@
                 for (let c = 0; c < cols; c++) {
                     if (!grid[r][c]) continue;
                     
-                    const x = c * cellSize;
-                    const y = r * cellSize;
+                    const x = c * cellWidth;
+                    const y = r * cellHeight;
                     
                     // Check each side of the cell
                     // Top
                     if (r === 0 || !grid[r-1][c]) {
-                        edges.push({ x1: x, y1: y, x2: x + cellSize, y2: y, dir: 'h' });
+                        edges.push({ x1: x, y1: y, x2: x + cellWidth, y2: y, dir: 'h' });
                     }
                     // Bottom
                     if (r === rows - 1 || !grid[r+1][c]) {
-                        edges.push({ x1: x + cellSize, y1: y + cellSize, x2: x, y2: y + cellSize, dir: 'h' });
+                        edges.push({ x1: x + cellWidth, y1: y + cellHeight, x2: x, y2: y + cellHeight, dir: 'h' });
                     }
                     // Left
                     if (c === 0 || !grid[r][c-1]) {
-                        edges.push({ x1: x, y1: y + cellSize, x2: x, y2: y, dir: 'v' });
+                        edges.push({ x1: x, y1: y + cellHeight, x2: x, y2: y, dir: 'v' });
                     }
                     // Right
                     if (c === cols - 1 || !grid[r][c+1]) {
-                        edges.push({ x1: x + cellSize, y1: y, x2: x + cellSize, y2: y + cellSize, dir: 'v' });
+                        edges.push({ x1: x + cellWidth, y1: y, x2: x + cellWidth, y2: y + cellHeight, dir: 'v' });
                     }
                 }
             }

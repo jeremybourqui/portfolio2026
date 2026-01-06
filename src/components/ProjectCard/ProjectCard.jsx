@@ -5,7 +5,7 @@ function ProjectCard({ name, description }) {
   return (
     <div className={styles.projectCard}>
       <div className={styles.imgWrapper}>
-        <img src='https://placehold.co/450x240'/>
+        <img className={styles.img} src='https://placehold.co/450x240'/>
       </div>
       <h3>{name}</h3>
       <p>{description}</p>
