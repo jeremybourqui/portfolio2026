@@ -153,6 +153,24 @@
             height: auto;
         }
 
+        /* NEW STYLES FOR HANDLES */
+        .vertex-handle {
+            cursor: pointer;
+            transition: all 0.2s;
+            stroke: white;
+            stroke-width: 2px;
+        }
+        .vertex-handle:hover {
+            r: 8px;
+            stroke: #333;
+        }
+        .vertex-handle.sharp {
+            fill: #ff4757;
+        }
+        .vertex-handle.rounded {
+            fill: #2ed573;
+        }
+        
         .code-output {
             border: 2px solid #ddd;
             border-radius: 8px;
@@ -254,6 +272,7 @@
 
     <script>
         let selectedCells = new Set();
+        let straightCorners = new Set();
         let gridData = {
             rows: 5,
             columns: 5,
@@ -269,6 +288,7 @@
 
             gridData = { rows, columns, cellWidth, cellHeight };
             selectedCells.clear();
+            straightCorners.clear(); // Reset custom corners on new grid
 
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
@@ -291,6 +311,9 @@
         }
 
         function toggleCell(row, col, cellElement) {
+            // Reset custom corners if shape structure changes
+            straightCorners.clear();
+            
             const key = `${row},${col}`;
             if (selectedCells.has(key)) {
                 selectedCells.delete(key);
@@ -303,15 +326,21 @@
 
         function clearSelection() {
             selectedCells.clear();
+            straightCorners.clear();
             document.querySelectorAll('.cell').forEach(cell => {
                 cell.classList.remove('selected');
             });
         }
 
-        function generateSVG() {
+        function generateSVG(keepOverrides = false) {
             if (selectedCells.size === 0) {
                 alert('Please select at least one cell!');
                 return;
+            }
+
+            // Only reset manual overrides if this is a "fresh" generation from controls
+            if (!keepOverrides) {
+                straightCorners.clear();
             }
 
             const color = document.getElementById('color').value;
@@ -325,29 +354,64 @@
                 grid[row][col] = true;
             });
 
-            // Generate path with rounded corners
-            const path = generateRoundedPath(grid, cellWidth, cellHeight, radius);
+            // 1. Calculate Edges and Contours
+            const edges = findEdges(grid, cellWidth, cellHeight);
+            const contours = buildContours(edges);
+
+            // 2. Generate Path String (Clean SVG)
+            const path = generatePathStringFromContours(contours, radius);
             
             const svgWidth = columns * cellWidth;
             const svgHeight = rows * cellHeight;
 
-            const svgCode = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+            const cleanSvgCode = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
   <path d="${path}" fill="${color}"/>
 </svg>`;
 
-            // Display SVG
-            const output = document.getElementById('svgOutput');
-            output.innerHTML = svgCode;
+            // 3. Generate SVG with Interactive Handles (Display only)
+            let handlesHTML = '';
+            contours.forEach(contour => {
+                contour.forEach(point => {
+                    const key = `${point.x},${point.y}`;
+                    const isStraight = straightCorners.has(key);
+                    const handleClass = isStraight ? 'vertex-handle sharp' : 'vertex-handle rounded';
+                    const title = isStraight ? 'Click to round' : 'Click to straighten';
+                    
+                    handlesHTML += `<circle 
+                        cx="${point.x}" 
+                        cy="${point.y}" 
+                        r="5" 
+                        class="${handleClass}"
+                        onclick="toggleCorner(${point.x}, ${point.y})"
+                    ><title>${title}</title></circle>`;
+                });
+            });
 
-            // Display code
-            document.getElementById('codeOutput').textContent = svgCode;
+            const displaySvgCode = `<svg width="${svgWidth}" height="${svgHeight}" viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+  <path d="${path}" fill="${color}"/>
+  <g class="handles">${handlesHTML}</g>
+</svg>`;
+
+            // Display preview
+            document.getElementById('svgOutput').innerHTML = displaySvgCode;
+
+            // Display code (without handles)
+            document.getElementById('codeOutput').textContent = cleanSvgCode;
         }
 
-        function generateRoundedPath(grid, cellWidth, cellHeight, radius) {
+        function toggleCorner(x, y) {
+            const key = `${x},${y}`;
+            if (straightCorners.has(key)) {
+                straightCorners.delete(key);
+            } else {
+                straightCorners.add(key);
+            }
+            generateSVG(true); // true = keep existing overrides
+        }
+
+        function findEdges(grid, cellWidth, cellHeight) {
             const rows = grid.length;
             const cols = grid[0].length;
-            
-            // Find all edges of the shape
             const edges = [];
             
             for (let r = 0; r < rows; r++) {
@@ -357,70 +421,68 @@
                     const x = c * cellWidth;
                     const y = r * cellHeight;
                     
-                    // Check each side of the cell
-                    // Top
-                    if (r === 0 || !grid[r-1][c]) {
-                        edges.push({ x1: x, y1: y, x2: x + cellWidth, y2: y, dir: 'h' });
-                    }
-                    // Bottom
-                    if (r === rows - 1 || !grid[r+1][c]) {
-                        edges.push({ x1: x + cellWidth, y1: y + cellHeight, x2: x, y2: y + cellHeight, dir: 'h' });
-                    }
-                    // Left
-                    if (c === 0 || !grid[r][c-1]) {
-                        edges.push({ x1: x, y1: y + cellHeight, x2: x, y2: y, dir: 'v' });
-                    }
-                    // Right
-                    if (c === cols - 1 || !grid[r][c+1]) {
-                        edges.push({ x1: x + cellWidth, y1: y, x2: x + cellWidth, y2: y + cellHeight, dir: 'v' });
-                    }
+                    if (r === 0 || !grid[r-1][c]) edges.push({ x1: x, y1: y, x2: x + cellWidth, y2: y });
+                    if (r === rows - 1 || !grid[r+1][c]) edges.push({ x1: x + cellWidth, y1: y + cellHeight, x2: x, y2: y + cellHeight });
+                    if (c === 0 || !grid[r][c-1]) edges.push({ x1: x, y1: y + cellHeight, x2: x, y2: y });
+                    if (c === cols - 1 || !grid[r][c+1]) edges.push({ x1: x + cellWidth, y1: y, x2: x + cellWidth, y2: y + cellHeight });
                 }
             }
+            return edges;
+        }
 
-            // Build contours by connecting edges
-            const contours = buildContours(edges);
-            
-            // Generate path with rounded corners
+        function generatePathStringFromContours(contours, defaultRadius) {
             let path = '';
             
             contours.forEach(contour => {
                 if (contour.length < 2) return;
                 
-                path += `M ${contour[0].x} ${contour[0].y} `;
+                // Start path at the midpoint of the last segment to avoid starting on a potentially rounded corner
+                const last = contour[contour.length - 1];
+                const first = contour[0];
+                const startX = (last.x + first.x) / 2;
+                const startY = (last.y + first.y) / 2;
+                
+                path += `M ${startX} ${startY} `;
                 
                 for (let i = 0; i < contour.length; i++) {
-                    const current = contour[i];
+                    const corner = contour[i];
+                    const prev = contour[(i - 1 + contour.length) % contour.length];
                     const next = contour[(i + 1) % contour.length];
                     
-                    const dx = next.x - current.x;
-                    const dy = next.y - current.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    // Determine radius for this specific corner
+                    const cornerKey = `${corner.x},${corner.y}`;
+                    const r = straightCorners.has(cornerKey) ? 0 : defaultRadius;
                     
-                    if (dist === 0) continue;
+                    // Vector corner -> prev
+                    const v1x = prev.x - corner.x;
+                    const v1y = prev.y - corner.y;
+                    const len1 = Math.sqrt(v1x*v1x + v1y*v1y);
                     
-                    // Calculate point before corner (with radius)
-                    const actualRadius = Math.min(radius, dist / 2);
-                    const ratio = (dist - actualRadius) / dist;
-                    const beforeX = current.x + dx * ratio;
-                    const beforeY = current.y + dy * ratio;
+                    // Vector corner -> next
+                    const v2x = next.x - corner.x;
+                    const v2y = next.y - corner.y;
+                    const len2 = Math.sqrt(v2x*v2x + v2y*v2y);
                     
-                    path += `L ${beforeX} ${beforeY} `;
+                    // Calculate actual drawing radius (cannot exceed half segment length)
+                    const limit = Math.min(len1/2, len2/2, r);
                     
-                    // Add rounded corner
-                    if (actualRadius > 0) {
-                        const nextNext = contour[(i + 2) % contour.length];
-                        const dx2 = nextNext.x - next.x;
-                        const dy2 = nextNext.y - next.y;
-                        const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-                        
-                        if (dist2 > 0) {
-                            const actualRadius2 = Math.min(actualRadius, dist2 / 2);
-                            const ratio2 = actualRadius2 / dist2;
-                            const afterX = next.x + dx2 * ratio2;
-                            const afterY = next.y + dy2 * ratio2;
-                            
-                            path += `Q ${next.x} ${next.y} ${afterX} ${afterY} `;
-                        }
+                    // Calculate start point of the curve (on segment coming FROM prev)
+                    const startCurveX = corner.x + (v1x/len1) * limit;
+                    const startCurveY = corner.y + (v1y/len1) * limit;
+                    
+                    // Calculate end point of the curve (on segment going TO next)
+                    const endCurveX = corner.x + (v2x/len2) * limit;
+                    const endCurveY = corner.y + (v2y/len2) * limit;
+                    
+                    // Line to start of curve
+                    path += `L ${startCurveX} ${startCurveY} `;
+                    
+                    // Curve (or sharp point if radius is 0)
+                    if (limit > 0) {
+                        path += `Q ${corner.x} ${corner.y} ${endCurveX} ${endCurveY} `;
+                    } else {
+                         // For sharp corners, L moves to startCurve which IS the corner
+                         // No additional command needed
                     }
                 }
                 
@@ -428,6 +490,13 @@
             });
             
             return path.trim();
+        }
+
+        // Bridge function for compatibility (if anything calls this directly)
+        function generateRoundedPath(grid, cellWidth, cellHeight, radius) {
+            const edges = findEdges(grid, cellWidth, cellHeight);
+            const contours = buildContours(edges);
+            return generatePathStringFromContours(contours, radius);
         }
 
         function buildContours(edges) {
@@ -441,6 +510,8 @@
                 if (!points.has(key1)) points.set(key1, []);
                 if (!points.has(key2)) points.set(key2, []);
                 
+                // Store connections. Note: This assumes simplified geometry where
+                // each point connects to exactly 2 others in a single contour loop
                 points.get(key1).push({ x: edge.x2, y: edge.y2 });
                 points.get(key2).push({ x: edge.x1, y: edge.y1 });
             });
@@ -448,7 +519,6 @@
             const contours = [];
             const visited = new Set();
             
-            // Start from first point and trace contour
             for (const [startKey, _] of points) {
                 if (visited.has(startKey)) continue;
                 
@@ -457,6 +527,7 @@
                 let current = { x: startX, y: startY };
                 let currentKey = startKey;
                 
+                // Simple greedy walk
                 do {
                     visited.add(currentKey);
                     contour.push(current);
@@ -464,8 +535,11 @@
                     const neighbors = points.get(currentKey) || [];
                     const next = neighbors.find(n => !visited.has(`${n.x},${n.y}`)) || neighbors[0];
                     
-                    if (!next) break;
-                    
+                    // If we're stuck or loop closed back to start
+                    if (!next || (visited.has(`${next.x},${next.y}`) && `${next.x},${next.y}` !== startKey)) {
+                         break;
+                    }
+
                     current = next;
                     currentKey = `${current.x},${current.y}`;
                     
@@ -475,7 +549,6 @@
                     contours.push(contour);
                 }
             }
-            
             return contours;
         }
 

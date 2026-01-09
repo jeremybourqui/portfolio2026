@@ -11,3 +11,11 @@
   gap: 16px;
   flex: 1 1 200px;
 }
+
+.blobLine {
+  margin: auto;
+  background-color: var(--color-background);
+  margin-bottom: -1px;
+  transform: translateY(24px);
+  z-index: -1;
+}

@@ -2,6 +2,7 @@
 
 .heroSection {
     background-color: var(--color-background);
+    padding-bottom: 36px;
 }
 
 .hero {
