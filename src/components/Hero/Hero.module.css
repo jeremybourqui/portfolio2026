@@ -18,14 +18,22 @@
     grid-row: 1 / 2;
     justify-self: center;
     align-self: center;
-    font-size: 40px;
+    font-size: clamp(
+    1.5rem,
+    6.2vw - 2.5rem,
+    4rem
+  );
 }
 
 .subtitle {
     grid-column: 1 / 7;
     grid-row: 2 / 4;
     align-self: center;
-    font-size: 64px;
+    font-size: clamp(
+    1.5rem,
+    6.2vw - 2.5rem,
+    4rem
+  );
     /* margin-top: -24px; */
     padding-left: 24px;
 }
@@ -33,7 +41,11 @@
 .subtitle:last-of-type {
     /* margin-top: 8px; */
     grid-row: 3/5;
-    font-size: 56px;
+    font-size: clamp(
+    1.5rem,
+    6.2vw - 2.5rem,
+    4rem
+  );
 }
 
 .blob {

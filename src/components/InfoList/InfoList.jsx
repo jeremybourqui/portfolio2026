@@ -1,16 +1,26 @@
 import React from 'react';
 import styles from './InfoList.module.css';
+import { IconContext } from "react-icons";
 
-function InfoList() {
+function InfoList({ items = [] }) {
   return (
-  <div>
-    <ul>
-      <li><em>Date</em> Experience/skills 1</li>
-      <li><em>Date</em> Experience/skills 2</li>
-      <li><em>Date</em> Experience/skills 3</li>
+
+    <ul className={styles.infoList}>
+      {items.map((item, index) => {
+        const IconComponent = item.icon;
+        return (
+          <li key={index}>
+            <IconContext.Provider value={{ size: "3em", className: styles.icon }}>
+              {IconComponent && <IconComponent />}
+            </IconContext.Provider>
+            <p>{item.name}</p>
+          </li>
+        );
+      })}
     </ul>
-  </div>
+
   );
 }
+
 
 export default InfoList;

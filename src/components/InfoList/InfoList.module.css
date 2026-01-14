@@ -1,1 +1,25 @@
 /* InfoList component styles */
+
+.infoList {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    justify-items: center;
+}
+
+.infoList li {
+    padding: 8px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+
+.infoList p {
+    margin:  8px 0;
+}
+
+.icon {
+margin: 8px;}

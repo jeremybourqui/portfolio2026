@@ -1,1 +1,6 @@
 /* About component styles */
+
+.about {
+    display: flex;
+    justify-content: space-around;
+}

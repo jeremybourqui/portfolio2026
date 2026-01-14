@@ -15,6 +15,6 @@
     border-radius: calc(var(--outer-radius) - var(--padding));
   }
 
-  h3, p, a {
+  .projectCard h3, .projectCard p, .projectCard a {
     margin: 8px 0;
   }

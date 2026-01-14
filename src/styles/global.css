@@ -10,6 +10,10 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
+h2 {
+  padding-bottom: 24px;
+}
+
 p {
   font-size: var(--text-base);
 }
@@ -26,4 +30,12 @@ ul {
 
 li {
   list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+section {
+  
 }
