@@ -1,1 +1,11 @@
 /* Contact component styles */
+
+.contactSection {
+    padding-bottom: 16px;
+}
+
+.contact {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}

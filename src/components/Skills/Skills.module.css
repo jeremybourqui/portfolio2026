@@ -1,6 +1,6 @@
-/* About component styles */
+/* Skills component styles */
 
-.about {
+.skills {
     display: flex;
     justify-content: space-around;
 }
