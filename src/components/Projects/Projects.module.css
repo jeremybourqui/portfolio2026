@@ -11,16 +11,3 @@
   gap: 16px;
   flex: 1 1 200px;
 }
-
-.blobLine {
-  margin: auto;
-  background-color: var(--color-background);
-  margin-bottom: -1px;
-  /* transform: translateY(24px); */
-  /* z-index: -1; */
-  max-width: fit-content;
-}
-
-.blobLine:last-of-type {
-  transform: rotate(180deg);
-}

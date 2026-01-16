@@ -1,1 +1,18 @@
 /* Footer component styles */
+
+.footer {
+    background-color: var(--color-background-strong);
+}
+
+.footer p {
+    padding: 16px 0;
+    text-align: center;
+    color: var(--color-background);
+}
+
+.blobLine {
+  margin: auto;
+  background-color: var(--color-background);
+  margin-bottom: -1px;
+  max-width: fit-content;
+}

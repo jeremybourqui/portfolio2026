@@ -1,0 +1,12 @@
+/* BlobDivider component styles */
+
+.blobDivider {
+  display: block;
+  margin: 0 auto;
+  margin-bottom: -1px;
+  max-width: fit-content;
+}
+
+.flipped {
+  transform: rotate(180deg);
+}
