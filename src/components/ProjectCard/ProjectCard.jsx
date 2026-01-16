@@ -1,15 +1,24 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './ProjectCard.module.css';
 
-function ProjectCard({ name, description }) {
+const PLACEHOLDER_IMAGE = 'https://placehold.co/450x240';
+
+function ProjectCard({ name, description, slug, image }) {
   return (
     <div className={styles.projectCard}>
       <div className={styles.imgWrapper}>
-        <img className={styles.img} src='https://placehold.co/450x240'/>
+        <img 
+          className={styles.img} 
+          src={image || PLACEHOLDER_IMAGE} 
+          alt={name} 
+        />
       </div>
       <h3>{name}</h3>
       <p>{description}</p>
-      <a href="#">Voir le projet</a>
+      <Link to={`/project/${slug}`} className={styles.link}>
+        Voir le projet
+      </Link>
     </div>
   );
 }

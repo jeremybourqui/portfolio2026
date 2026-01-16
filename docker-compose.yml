@@ -1,0 +1,28 @@
+services:
+  portfolio2025:
+    image: ${IMAGE:-ghcr.io/jeremybourqui/portfolio2026:latest}
+    pull_policy: always
+    restart: unless-stopped
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      # unique router/service names
+      - "traefik.http.routers.portfolio2025-router.rule=Host(`portfolio.jeremybourqui.ch`)"
+      - "traefik.http.routers.portfolio2025-router.entrypoints=websecure"
+      - "traefik.http.routers.portfolio2025-router.tls=true"
+      - "traefik.http.routers.portfolio2025-router.tls.certresolver=le"
+      - "traefik.http.services.portfolio2025-svc.loadbalancer.server.port=80"
+      - "traefik.docker.network=proxy"
+      # HTTP -> HTTPS redirect
+      - "traefik.http.routers.portfolio2025-http.rule=Host(`portfolio.jeremybourqui.ch`)"
+      - "traefik.http.routers.portfolio2025-http.entrypoints=web"
+      - "traefik.http.routers.portfolio2025-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+    name: proxy

@@ -1,0 +1,104 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+# Allow pushing images to GHCR with GITHUB_TOKEN
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Login to GHCR using GITHUB_TOKEN (no PAT needed here)
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Build and push Docker image
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
+      
+      # Deploy to VPS (OpenSSH)
+      - name: Start ssh-agent and add key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add VPS host to known_hosts
+        shell: bash
+        run: |
+          PORT="${{ secrets.VPS_PORT }}"
+          [ -z "$PORT" ] && PORT=22
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          ssh-keyscan -H -p "$PORT" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Ensure remote directory
+        shell: bash
+        run: |
+          PORT="${{ secrets.VPS_PORT }}"
+          [ -z "$PORT" ] && PORT=22
+          ssh -o StrictHostKeyChecking=yes -p "$PORT" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" "mkdir -p /opt/portfolio2025"
+
+      - name: Upload compose files
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT="${{ secrets.VPS_PORT }}"
+          [ -z "$PORT" ] && PORT=22
+
+          # Pick compose file from repo root
+          SRC=""
+          for f in docker-compose.yml docker-compose.yaml compose.yml compose.yaml; do
+            if [ -f "$f" ]; then SRC="$f"; break; fi
+          done
+          if [ -z "$SRC" ]; then
+            echo "No compose file found in repo root." >&2
+            exit 1
+          fi
+          echo "Using compose file: $SRC"
+
+          ssh -o StrictHostKeyChecking=yes -p "$PORT" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" "mkdir -p /opt/portfolio2025"
+          scp -P "$PORT" -o StrictHostKeyChecking=yes "$SRC" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/opt/portfolio2025/compose.yaml"
+
+      - name: Deploy to VPS
+        shell: bash
+        env:
+          GHCR_USER: ${{ secrets.GHCR_USER }}
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+        run: |
+          set -euo pipefail
+          PORT="${{ secrets.VPS_PORT }}"
+          [ -z "$PORT" ] && PORT=22
+          ssh -o StrictHostKeyChecking=yes -p "$PORT" "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" << EOF
+            set -euo pipefail
+            REMOTE_DIR=/opt/portfolio2025
+            CF="\$REMOTE_DIR/compose.yaml"
+
+            GHCR_USER="${GHCR_USER:-}"
+            GHCR_PAT="${GHCR_PAT:-}"
+            if [ -n "\$GHCR_PAT" ] && [ -n "\$GHCR_USER" ]; then
+              echo "\$GHCR_PAT" | docker login ghcr.io -u "\$GHCR_USER" --password-stdin
+            fi
+
+            # Remove old services in this project to avoid label conflicts
+            docker compose -f "\$CF" up -d --force-recreate --remove-orphans
+          EOF
