@@ -1,32 +1,16 @@
-/**
- * Project data for the portfolio
- * 
- * Structure:
- * - slug: URL-friendly identifier (used in routes)
- * - name: Display name
- * - shortDescription: Brief description for cards
- * - fullDescription: Detailed description for project page
- * - image: Thumbnail/cover image
- * - gallery: Array of additional images
- * - technologies: Tech stack used
- * - features: Key features/highlights
- * - links: External links (live demo, GitHub, etc.)
- * - date: Project date/year
- * - status: 'completed' | 'in-progress' | 'archived'
- * - category: Project type for filtering
- */
+/*Project data for the portfolio */
 
 export const projects = [
   {
     slug: 'photomaton-ar',
     name: 'Photomaton AR',
-    shortDescription: "Réalisation d'un photomaton avec incrustation en réalité augmentée.",
+    shortDescription: "Réalisation d'un photomaton avec incrustation d'élément en réalité augmentée.",
     fullDescription: `
       Réalisation d'un photomaton permettant l'incrustation en réalité augmentée 
       d'un masque, à l'aide d'un loup portant un QR code simple, puis de 
       l'impression de la photo.
     `,
-    image: '/images/projects/photomaton-ar/cover.jpg',
+    image: 'src/assets/img/photomatonAR/cover_photomaton.jpg',
     gallery: [
       '/images/projects/photomaton-ar/screenshot-1.jpg',
       '/images/projects/photomaton-ar/screenshot-2.jpg',

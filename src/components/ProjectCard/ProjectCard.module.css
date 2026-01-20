@@ -15,6 +15,7 @@
     border-radius: calc(var(--outer-radius) - var(--padding));
   }
 
-  .projectCard h3, .projectCard p, .projectCard a {
-    margin: 8px 0;
-  }
+.projectCard :is(h3, p, a, .link) {
+  margin: 8px 0;
+}
+
