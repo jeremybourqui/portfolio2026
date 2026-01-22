@@ -1,6 +1,5 @@
-.projectDetail {
-  min-height: 100vh;
-  padding: 2rem 0;
+h1, h2, h3 {
+  padding: 1rem 0;
 }
 
 .backLink {
@@ -14,27 +13,11 @@
 }
 
 .description {
-  font-size: 1.25rem;
-  color: var(--color-background-strong);
-  margin-bottom: 2rem;
 }
 
-.content,
-.features,
-.technologies,
-.links {
-  margin-bottom: 2rem;
-}
-
-.content h2,
-.features h2,
-.technologies h2,
-.links h2 {
-  margin-bottom: 1rem;
-}
 
 .content p {
-  white-space: pre-line; /* Preserve line breaks in fullDescription */
+  width: 80ch;
 }
 
 .features ul {
@@ -54,10 +37,8 @@
 }
 
 .technologies li {
-  background: var(--color-accent-weak, #f0f0f0);
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.875rem;
 }
 
 .linksContainer {

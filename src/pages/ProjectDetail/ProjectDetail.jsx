@@ -3,7 +3,9 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import MaxWidthWrapper from '../../components/MaxWidthWrapper';
 import { getProjectBySlug } from '../../data/projects';
+import InfoList from '../../components/InfoList';
 import styles from './ProjectDetail.module.css';
+
 
 function ProjectDetail() {
   const { projectId } = useParams();
@@ -46,7 +48,7 @@ function ProjectDetail() {
 
           {project.features.length > 0 && (
             <section className={styles.features}>
-              <h2>Fonctionnalités</h2>
+              <h3>Fonctionnalités</h3>
               <ul>
                 {project.features.map((feature) => (
                   <li key={feature}>{feature}</li>
@@ -57,7 +59,10 @@ function ProjectDetail() {
 
           {project.technologies.length > 0 && (
             <section className={styles.technologies}>
-              <h2>Technologies utilisées</h2>
+              <h3>Technologies utilisées</h3>
+
+              <InfoList items={project.technologies} />
+
               <ul>
                 {project.technologies.map((tech) => (
                   <li key={tech}>{tech}</li>
@@ -68,7 +73,7 @@ function ProjectDetail() {
 
           {(project.links.live || project.links.github || project.links.demo) && (
             <section className={styles.links}>
-              <h2>Liens</h2>
+              <h3>Liens</h3>
               <div className={styles.linksContainer}>
                 {project.links.live && (
                   <a href={project.links.live} target="_blank" rel="noopener noreferrer">

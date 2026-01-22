@@ -6,16 +6,20 @@ export const projects = [
     name: 'Photomaton AR',
     shortDescription: "Réalisation d'un photomaton avec incrustation d'élément en réalité augmentée.",
     fullDescription: `
-      Réalisation d'un photomaton permettant l'incrustation en réalité augmentée 
-      d'un masque, à l'aide d'un loup portant un QR code simple, puis de 
-      l'impression de la photo.
-    `,
+      Réalisation d'un photomaton permettant l'incrustation en réalité augmentée d'un masque, à l'aide d'un loup portant un qr code simple, puis de l'impression de la photo. Développé avec des technologies web pour gérer l'interface et la réalité augmentée. Le flux vidéo est géré via le logiciels OBS et connecté a l'interface avec un client websocket, pour changer les arrières-plans.
+      Ce travail de groupe à été réalisé pour le Musée suisse de l'appareil photographique, j'ai personnellement gérer la capture vidéo, et la mise en place des masques en réalité augmentée.
+  `,
     image: 'src/assets/img/photomatonAR/cover_photomaton.jpg',
     gallery: [
       '/images/projects/photomaton-ar/screenshot-1.jpg',
       '/images/projects/photomaton-ar/screenshot-2.jpg',
     ],
-    technologies: ['React', 'AR.js', 'Three.js', 'Node.js'],
+    technologies: [
+      { icon: React, name: '' },
+      'React', 
+      'AR.js', 
+      'Three.js', 
+      'Node.js'],
     features: [
       'Détection de QR code en temps réel',
       'Superposition de masques 3D',
