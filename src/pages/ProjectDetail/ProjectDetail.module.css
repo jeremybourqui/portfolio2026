@@ -13,7 +13,9 @@ h1, h2, h3 {
 }
 
 .description {
+  padding-bottom: 1rem;
 }
+
 
 
 .content p {
@@ -62,4 +64,20 @@ h1, h2, h3 {
 
 .linksContainer a:hover {
   background: var(--color-accent);
+}
+
+.gallery {
+}
+
+.imageWrapper {
+  display: flex;
+  max-width: 300px;
+  flex: 1 1 auto;
+  margin-right: 1rem;
+  gap: 16px;
+  border-radius: 20px;
+}
+
+.galleryImage {
+  border-radius: 20px;
 }

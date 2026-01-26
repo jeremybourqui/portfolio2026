@@ -37,10 +37,21 @@ function ProjectDetail() {
           <Link to="/#projects" className={styles.backLink}>
             ← Retour aux projets
           </Link>
-          
+
           <h1>{project.name}</h1>
           <p className={styles.description}>{project.shortDescription}</p>
-          
+
+          <section className={styles.gallery}>
+
+            {project.gallery.length > 0 && (
+              <div className={styles.imageWrapper}>
+                {project.gallery.map((image, index) => (
+                  <img key={index} src={image} alt={`${project.name}`} className={styles.galleryImage} />
+                ))}
+              </div>
+            )}
+          </section>
+
           <section className={styles.content}>
             <h2>À propos du projet</h2>
             <p>{project.fullDescription}</p>
@@ -60,14 +71,7 @@ function ProjectDetail() {
           {project.technologies.length > 0 && (
             <section className={styles.technologies}>
               <h3>Technologies utilisées</h3>
-
               <InfoList items={project.technologies} />
-
-              <ul>
-                {project.technologies.map((tech) => (
-                  <li key={tech}>{tech}</li>
-                ))}
-              </ul>
             </section>
           )}
 

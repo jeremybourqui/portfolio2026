@@ -1,5 +1,15 @@
 /*Project data for the portfolio */
 
+import { SiAframe, SiObsstudio } from "react-icons/si";
+import { IoLogoJavascript } from "react-icons/io5";
+
+// Import images
+import coverPhotomaton from '../assets/img/photomatonAR/cover_photomaton.jpg';
+import loupImg from '../assets/img/photomatonAR/loup.webp';
+import photomatonUsageImg from '../assets/img/photomatonAR/photomaton_usage.webp';
+import photoImprimeeImg from '../assets/img/photomatonAR/photosimprimee.webp';
+import utilisateur from '../assets/img/photomatonAR/utilisateur.webp';
+
 export const projects = [
   {
     slug: 'photomaton-ar',
@@ -9,17 +19,19 @@ export const projects = [
       Réalisation d'un photomaton permettant l'incrustation en réalité augmentée d'un masque, à l'aide d'un loup portant un qr code simple, puis de l'impression de la photo. Développé avec des technologies web pour gérer l'interface et la réalité augmentée. Le flux vidéo est géré via le logiciels OBS et connecté a l'interface avec un client websocket, pour changer les arrières-plans.
       Ce travail de groupe à été réalisé pour le Musée suisse de l'appareil photographique, j'ai personnellement gérer la capture vidéo, et la mise en place des masques en réalité augmentée.
   `,
-    image: 'src/assets/img/photomatonAR/cover_photomaton.jpg',
+    image: coverPhotomaton,
     gallery: [
-      '/images/projects/photomaton-ar/screenshot-1.jpg',
-      '/images/projects/photomaton-ar/screenshot-2.jpg',
+      coverPhotomaton,
+      photomatonUsageImg,
+      loupImg,
+      utilisateur,
+      photoImprimeeImg,
     ],
     technologies: [
-      { icon: React, name: '' },
-      'React', 
-      'AR.js', 
-      'Three.js', 
-      'Node.js'],
+      { icon: IoLogoJavascript, name: 'JavaScript' },
+      { icon: SiAframe, name: 'A-Frame' },
+      { icon: SiObsstudio, name: 'OBS Studio' }
+    ],
     features: [
       'Détection de QR code en temps réel',
       'Superposition de masques 3D',
