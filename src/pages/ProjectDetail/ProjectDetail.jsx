@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -10,6 +11,16 @@ import styles from './ProjectDetail.module.css';
 function ProjectDetail() {
   const { projectId } = useParams();
   const project = getProjectBySlug(projectId);
+  const galleryRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (!galleryRef.current) return;
+    const scrollAmount = galleryRef.current.offsetWidth * 0.8;
+    galleryRef.current.scrollBy({
+      left: direction === 'next' ? scrollAmount : -scrollAmount,
+      behavior: 'smooth'
+    });
+  };
 
   if (!project) {
     return (
@@ -42,14 +53,27 @@ function ProjectDetail() {
           <p className={styles.description}>{project.shortDescription}</p>
 
           <section className={styles.gallery}>
+            <button className={styles.navButton} onClick={() => scroll('prev')} aria-label="Previous">
+              ‹
+            </button>
+            <div className={styles.imageGallery} ref={galleryRef}>
+              {project.gallery.map((image, index) => (
+                <img key={index} src={image} alt={`Project screenshot ${index + 1}`} />
+              ))}
+            </div>
+            <button className={styles.navButton} onClick={() => scroll('next')} aria-label="Next">
+              ›
+            </button>
 
-            {project.gallery.length > 0 && (
+
+
+            {/* {project.gallery.length > 0 && (
               <div className={styles.imageWrapper}>
                 {project.gallery.map((image, index) => (
                   <img key={index} src={image} alt={`${project.name}`} className={styles.galleryImage} />
                 ))}
               </div>
-            )}
+            )} */}
           </section>
 
           <section className={styles.content}>
