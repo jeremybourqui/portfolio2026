@@ -9,10 +9,3 @@
     text-align: center;
     color: var(--color-background);
 }
-
-.blobLine {
-  margin: auto;
-  background-color: var(--color-background);
-  margin-bottom: -1px;
-  max-width: fit-content;
-}

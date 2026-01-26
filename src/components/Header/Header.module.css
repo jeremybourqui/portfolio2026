@@ -2,13 +2,13 @@
 
 .header {
     background-color: var(--color-background);
-    padding: 24px;
+    padding: 8px;
 }
 
 .nav {
     max-width: 700px;
     margin: 0 auto;
-    padding: 24px;
+    padding: 8px;
 }
 
 .menuList {
