@@ -15,7 +15,7 @@
     display: flex;
     justify-content: space-evenly;
     background-color: var(--color-accent-weak);
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 8px;
     font-size: var(--text-lg);
     color: var(--color-background-strong);    
