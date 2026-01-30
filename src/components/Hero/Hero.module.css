@@ -9,6 +9,7 @@
 .hero {
     position: relative;
     aspect-ratio: 5/3;
+    container-type: inline-size;
 }
 
 .blobContainer {
@@ -25,34 +26,38 @@
     top: 0;
     left: 0;
     width: 80%;
-    height: 70%;
+    height: auto;
+    z-index: -1;
 }
 
 .blobdk {
-    position: absolute;
-    bottom: 101px;
-    right: 0;
-    width: 67%;
-    height: 42%;
+    width: 58%;
+    top: 32.1%;
+    left: 31%;
+    z-index: -2;
+    /* bottom: 101px;
+    right: 50px; */
 }
 
 .textContent {
-    position: relative;
-    z-index: 1;
+    /* position: absolute; */
+    z-index: 3;
+    /* top: 9.5cqh;
+    left: 20cqh; */
+    padding-top: 7%;
+    padding-left: 12%;
     display: flex;
     flex-direction: column;
-    padding: 24px;
     width: fit-content;
-    transform: translate(37.5%, 50%);
 }
 
 .title {
-    font-size: clamp(1.6rem, 7.5vh, 4.5rem);
+    font-size: 4cqw;
     /* position: absolute;
     top: 30%;
     left: 50%; */
 }
 
 .subtitle {
-    font-size: clamp(1.3rem, 6vh, 2rem);
+    font-size: 3cqw;
 }
