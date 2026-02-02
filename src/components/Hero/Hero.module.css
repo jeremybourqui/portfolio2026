@@ -50,8 +50,10 @@
 
 .title {
     font-size: 4cqw;
+    padding: 0;
 }
 
 .subtitle {
     font-size: 3cqw;
+    padding: 0;
 }

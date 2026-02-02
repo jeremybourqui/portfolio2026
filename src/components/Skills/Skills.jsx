@@ -22,7 +22,7 @@ function Skills() {
   ];
 
   return (
-      <section>
+      <section className={styles.skillsSection}>
         <MaxWidthWrapper>
           <h2>A propos</h2>
           <div className={styles.skills}>

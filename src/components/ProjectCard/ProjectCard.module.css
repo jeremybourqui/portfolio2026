@@ -3,6 +3,7 @@
 .projectCard {
   --outer-radius: 24px;
   --padding: 16px;
+  margin: 0 16px;
 
   border-radius: var(--outer-radius);
   padding: var(--padding);
@@ -24,7 +25,6 @@
   display: block;
 }
 
-
 .projectCard :is(h3, p, a, .link) {
-  margin: 8px 0;
+  padding: 8px 0;
 }

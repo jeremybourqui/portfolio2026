@@ -4,3 +4,7 @@
     display: flex;
     justify-content: space-around;
 }
+
+.skillsSection h2 {
+    padding-top: 32px;
+}

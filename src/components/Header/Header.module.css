@@ -2,11 +2,11 @@
 
 .header {
     background-color: var(--color-background);
-    padding: 8px;
+    padding: 16px;
 }
 
 .nav {
-    max-width: 700px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 8px;
 }

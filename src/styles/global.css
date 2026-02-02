@@ -4,10 +4,7 @@
 
 :root{
   background-color: var(--color-background);
-}
-
-h1, h2, h3, h4, h5, h6 {
-
+  font-family: "Space Mono", monospace;
 }
 
 h2 {
@@ -16,11 +13,6 @@ h2 {
 
 p {
   font-size: var(--text-base);
-}
-
-
-h1 {
-
 }
 
 ul {
@@ -36,6 +28,6 @@ a {
   color: inherit;
 }
 
-section {
-  
+section h2 {
+  padding-bottom: 24px;
 }
