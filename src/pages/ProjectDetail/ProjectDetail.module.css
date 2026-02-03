@@ -1,6 +1,7 @@
-/* h1, h2, h3 {
+/*ProjectDetail component styles */
+.projectDetail :is(h1, h2, h3) {
   padding: 1rem 0;
-} */
+}
 
 .backLink {
   margin-bottom: 2rem;

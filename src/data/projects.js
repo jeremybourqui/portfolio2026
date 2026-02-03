@@ -38,8 +38,8 @@ export const projects = [
       'Impression photo instantanée',
     ],
     links: {
-      live: null,
-      github: 'https://github.com/username/photomaton-ar',
+      live: 'https://piar.surge.sh/',
+      github: 'https://github.com/watermelon-ltd/PB-Turfu',
       demo: null,
     },
     date: '2025',
