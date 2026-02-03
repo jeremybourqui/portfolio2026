@@ -71,6 +71,42 @@
 
 .embla__slide__img {
   border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Lightbox */
+.embla__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.embla__lightbox__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.4rem 0.6rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.embla__lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+.embla__lightbox__img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 .embla__controls {

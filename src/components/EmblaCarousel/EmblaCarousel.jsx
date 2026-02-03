@@ -12,6 +12,7 @@ import './embla.css'
 const EmblaCarousel = (props) => {
   const { slides, options } = props
   const [emblaRef, emblaApi] = useEmblaCarousel({ ...options, loop: true, align: 'start' })
+  const [lightboxSrc, setLightboxSrc] = React.useState(null)
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi)
@@ -29,7 +30,7 @@ const EmblaCarousel = (props) => {
         <div className="embla__container">
           {slides.map((image, index) => (
             <div className="embla__slide" key={index}>
-              <img src={image} alt={`Slide ${index + 1}`} className="embla__slide__img" />
+              <img src={image} alt={`Slide ${index + 1}`} className="embla__slide__img" onClick={() => setLightboxSrc(image)} />
             </div>
           ))}
         </div>
@@ -53,6 +54,13 @@ const EmblaCarousel = (props) => {
           ))}
         </div>
       </div>
+
+      {lightboxSrc && (
+        <div className="embla__lightbox" onClick={() => setLightboxSrc(null)}>
+          <button className="embla__lightbox__close" onClick={() => setLightboxSrc(null)} aria-label="Close">&#x2715;</button>
+          <img src={lightboxSrc} alt="Enlarged" className="embla__lightbox__img" onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
     </div>
   )
 }
