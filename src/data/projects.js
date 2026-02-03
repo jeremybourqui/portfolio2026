@@ -10,6 +10,7 @@ import photomatonUsageImg from '../assets/img/photomatonAR/photomaton_usage.webp
 import photoImprimeeImg from '../assets/img/photomatonAR/photosimprimee.webp';
 import utilisateur from '../assets/img/photomatonAR/utilisateur.webp';
 
+
 export const projects = [
   {
     slug: 'photomaton-ar',
@@ -34,6 +35,8 @@ export const projects = [
     ],
     features: [
       'Détection de QR code en temps réel',
+      'Prise de photo',
+      'Gestion de fond vert pour affichage de l’arrière-plan personnalisé',
       'Superposition de masques 3D',
       'Impression photo instantanée',
     ],

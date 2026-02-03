@@ -5,6 +5,7 @@ import MaxWidthWrapper from '../../components/MaxWidthWrapper';
 import { getProjectBySlug } from '../../data/projects';
 import InfoList from '../../components/InfoList';
 import styles from './ProjectDetail.module.css';
+import EmblaCarousel from '../../components/EmblaCarousel/EmblaCarousel'
 
 
 function ProjectDetail() {
@@ -44,10 +45,8 @@ function ProjectDetail() {
           <section className={styles.gallery}>
 
             {project.gallery.length > 0 && (
-              <div className={styles.imageWrapper}>
-                {project.gallery.map((image, index) => (
-                  <img key={index} src={image} alt={`${project.name} - Image ${index + 1}`} className={styles.galleryImage} />
-                ))}
+              <div className={styles.galleryWrapper}>
+                <EmblaCarousel slides={project.gallery} />
               </div>
             )}
           </section>
@@ -67,7 +66,6 @@ function ProjectDetail() {
               </ul>
             </section>
           )}
-
           {project.technologies.length > 0 && (
             <section className={styles.technologies}>
               <h3>Technologies utilisées</h3>
