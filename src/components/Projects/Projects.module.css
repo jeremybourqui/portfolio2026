@@ -4,10 +4,22 @@
   padding: 24px 24px 64px 24px;
   background-color: var(--color-accent-weak);
   color: var(--color-background);
+  overflow: hidden;
 }
 
 .projectsGrid {
   display: flex;
   gap: 32px;
-  /* flex: 1 1 200px; */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 16px; /* space for scrollbar or thumb */
+
+  /* Hide scrollbar but keep it functional */
+  scrollbar-width: none; /* Firefox */
+}
+
+.projectsGrid::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
