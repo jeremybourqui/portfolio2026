@@ -3,13 +3,20 @@
 .heroSection {
     background-color: var(--color-background);
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .hero {
     position: relative;
     aspect-ratio: 5/2;
-    margin: 0 auto;
+    min-width: 768px;
     container-type: inline-size;
+    margin: 0 auto;
+    @media screen and (max-width: 768px) {
+        left: 60%;
+        transform: translateX(-50%);
+    }
+        
 }
 
 .blobContainer {
@@ -29,13 +36,21 @@
 }
 
 .blobdk {
-    max-width: revert;
-    position: absolute;
-    height: auto;
-    width: 75%;
-    top: 32.1%;
-    left: 31%;
-    z-index: -2;
+    transform: translate(440px, 270px);
+    transition: transform 0.3s ease;
+
+    @media screen and (max-width: 768px) {
+        transform: translate(200px, 270px);
+    }
+}
+
+.blobGrey {
+    transform: translate(580px, -90px);
+    transition: transform 0.3s ease;
+
+    @media screen and (max-width: 768px) {
+        transform: translate(200px, 270px);
+    }
 }
 
 .textContent {

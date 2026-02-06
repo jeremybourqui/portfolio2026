@@ -3,6 +3,10 @@
 .skills {
     display: flex;
     justify-content: space-around;
+
+    @media screen and (max-width: 800px) {
+        flex-direction: column;
+    }
 }
 
 .skillsSection h2 {

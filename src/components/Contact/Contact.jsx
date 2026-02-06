@@ -10,8 +10,6 @@ import { IoIosMail } from "react-icons/io";
 
 function Contact() {
   const info = [
-    { icon: VscAccount, name: 'Jeremy Bourqui' },
-    { icon: GoHomeFill, name: 'Lausanne' },
     { icon: IoIosMail, name: 'jeremy@jeremybourqui.ch', href: 'mailto:jeremy@jeremybourqui.ch' },
     { icon: FaLinkedin, name: 'Linkedin', href: 'www.linkedin.com/in/jeremy-bourqui-972346146' },
     { icon: FaGithub, name: 'GitHub', href: 'https://github.com/jeremybourqui/' },

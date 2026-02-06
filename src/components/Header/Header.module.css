@@ -11,16 +11,71 @@
     padding: 8px;
 }
 
+/* Hide the checkbox */
+.burgerCheckbox {
+  display: none;
+}
+
+/* The 3 lines */
+.burgerIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  width: 30px;
+}
+
+.burgerIcon span {
+  display: block;
+  height: 3px;
+  background: #333;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Menu hidden by default on mobile */
 .menuList {
-    display: flex;
-    justify-content: space-evenly;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
     background-color: var(--color-accent-weak);
     border-radius: 20px;
     padding: 8px;
     font-size: var(--text-lg);
-    color: var(--color-background-strong);    
+    color: var(--color-background-strong);
 }
 
-.menuList a:visited{
+.menuList a:visited {
     color: inherit;
+}
+
+/* Show menu when checkbox is checked */
+.burgerCheckbox:checked ~ .menuList {
+  display: flex;
+}
+
+/* Animate into an X when open */
+.burgerCheckbox:checked ~ .burgerIcon span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.burgerCheckbox:checked ~ .burgerIcon span:nth-child(2) {
+  opacity: 0;
+}
+
+.burgerCheckbox:checked ~ .burgerIcon span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Desktop: hide burger, show menu */
+@media (min-width: 768px) {
+  .burgerIcon {
+    display: none;
+  }
+
+  .menuList {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
 }
