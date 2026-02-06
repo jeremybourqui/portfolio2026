@@ -45,7 +45,7 @@
 }
 
 .blobGrey {
-    transform: translate(580px, -90px);
+    transform: translate(440px, -90px);
     transition: transform 0.3s ease;
 
     @media screen and (max-width: 768px) {
