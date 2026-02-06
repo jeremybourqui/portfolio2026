@@ -1,7 +1,9 @@
 /*Project data for the portfolio */
 
-import { SiAframe, SiObsstudio } from "react-icons/si";
+import { SiAframe, SiObsstudio, SiStorybook } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
+import { FaReact } from "react-icons/fa";
+import { RiTailwindCssFill } from "react-icons/ri";
 
 // Import images
 import coverPhotomaton from '../assets/img/photomatonAR/cover_photomaton.jpg';
@@ -9,6 +11,8 @@ import loupImg from '../assets/img/photomatonAR/loup.webp';
 import photomatonUsageImg from '../assets/img/photomatonAR/photomaton_usage.webp';
 import photoImprimeeImg from '../assets/img/photomatonAR/photosimprimee.webp';
 import utilisateur from '../assets/img/photomatonAR/utilisateur.webp';
+
+import library from '../assets/img/reactLibrary/library.png';
 
 
 export const projects = [
@@ -50,13 +54,19 @@ export const projects = [
     category: 'Application Web',
   },
   {
-    slug: 'projet-2',
-    name: 'Projet 2',
-    shortDescription: 'Description du projet 2.',
-    fullDescription: 'Description complète du projet 2...',
-    image: null,
-    gallery: [],
-    technologies: [],
+    slug: 'maj-react-library',
+    name: 'Mise à jour d\'une bibliothèque React',
+    shortDescription: 'Mise à jour d\'une bibliothèque React pour définir une uniformité graphique ainsi que différentes mises à jour techniques.',
+    fullDescription: 'La bibliothèque React interne de l\'Orif a été mise à jour pour assurer une uniformité graphique à travers les différents projets. J\'ai travaillé sur la refactorisation des composants existants et l\'ajout de nouvelles fonctionnalités pour améliorer l\'expérience utilisateur et la maintenabilité du code.',
+    image: library,
+    gallery: [
+      library,
+    ],
+    technologies: [
+      { icon: FaReact, name: 'React' },
+      { icon: RiTailwindCssFill, name: 'Tailwind CSS' },
+      { icon: SiStorybook, name: 'Storybook' }
+    ],
     features: [],
     links: {
       live: null,

@@ -9,7 +9,8 @@
   padding: var(--padding);
   background-color: var(--color-background-strong);
   color: var(--color-background);
-  flex: 1 1 200px;
+  flex: 1 1 330px;
+  min-width: 330px;
 }
 
 .imgWrapper {
