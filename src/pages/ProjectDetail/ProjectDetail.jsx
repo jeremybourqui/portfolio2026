@@ -84,7 +84,7 @@ function ProjectDetail() {
                 )}
                 {project.links.github && (
                   <a href={project.links.github} target="_blank" rel="noopener noreferrer">
-                    Code source
+                    GitHub
                   </a>
                 )}
                 {project.links.demo && (

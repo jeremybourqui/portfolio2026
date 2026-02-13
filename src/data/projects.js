@@ -1,9 +1,10 @@
 /*Project data for the portfolio */
 
-import { SiAframe, SiObsstudio, SiStorybook } from "react-icons/si";
+import { SiAframe, SiI18Next, SiObsstudio, SiStorybook } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
-import { FaReact } from "react-icons/fa";
+import { FaReact, FaVuejs } from "react-icons/fa";
 import { RiTailwindCssFill } from "react-icons/ri";
+import { SiVite } from "react-icons/si";
 
 // Import images
 import coverPhotomaton from '../assets/img/photomatonAR/cover_photomaton.jpg';
@@ -11,8 +12,8 @@ import loupImg from '../assets/img/photomatonAR/loup.webp';
 import photomatonUsageImg from '../assets/img/photomatonAR/photomaton_usage.webp';
 import photoImprimeeImg from '../assets/img/photomatonAR/photosimprimee.webp';
 import utilisateur from '../assets/img/photomatonAR/utilisateur.webp';
-
 import library from '../assets/img/reactLibrary/library.png';
+import calendar from '../assets/img/calendar/calendar.png'
 
 
 export const projects = [
@@ -78,20 +79,25 @@ export const projects = [
     category: 'Application Web',
   },
   {
-    slug: 'projet-3',
-    name: 'Projet 3',
-    shortDescription: 'Description du projet 3.',
-    fullDescription: 'Description complète du projet 3...',
-    image: null,
-    gallery: [],
-    technologies: [],
+    slug: 'calendar',
+    name: 'Calendrier de visites',
+    shortDescription: 'Développement d\'un calendrier de droit de visites pour la Justice de paix.',
+    fullDescription: 'Conception et développement d\'un outil web pour la création de calendriers de droit de visite pour la justice de paix, prenant en compte les vacances, jours fériés et activités de l\'enfant. L\'application a été développée avec le framework Vuejs 3 et permet l\'export des résultats tout en respectant les lois sur la protection des données personnelles. ',
+    image: calendar,
+    gallery: [
+      calendar
+    ],
+    technologies: [
+      { icon: FaVuejs, name: 'Vue.js 3' },
+      { icon: SiVite, name: 'Vite' },
+    ],
     features: [],
     links: {
-      live: null,
-      github: null,
+      live: 'https://tbcalendrier2022.surge.sh/',
+      github: 'https://github.com/jeremybourqui/TBCalendrier',
       demo: null,
     },
-    date: '2024',
+    date: '2022',
     status: 'completed',
     category: 'Autre',
   },
