@@ -3,7 +3,6 @@
 .heroSection {
     background-color: var(--color-background);
     margin: 0 auto;
-    overflow: hidden;
 }
 
 .hero {
@@ -16,7 +15,7 @@
         left: 60%;
         transform: translateX(-50%);
     }
-        
+    
 }
 
 .blobContainer {
@@ -27,7 +26,8 @@
 }
 
 .blob {
-    max-width: revert;
+    /* max-width: revert; */
+    overflow: visible;
     position: relative;
     display: block;
     width: 80cqw;
@@ -45,8 +45,9 @@
 }
 
 .blobGrey {
-    transform: translate(440px, -90px);
+    transform: translate(470px, 20px) scaleX(1.29) scaleY(1.35);
     transition: transform 0.3s ease;
+    height: 210px;
 
     @media screen and (max-width: 768px) {
         transform: translate(200px, 270px);
