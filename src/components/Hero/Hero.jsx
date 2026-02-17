@@ -1,20 +1,12 @@
 import React from 'react';
 import styles from './Hero.module.css';
 import MaxWidthWrapper from '../MaxWidthWrapper';
-import { Canvas } from '@react-three/fiber';
-import Scene from '../../spline/cone.jsx';
 
 function Hero() {
   return (
     <section className={styles.heroSection}>
       <MaxWidthWrapper>
         <div className={styles.hero}>
-          
-          {/* <div className={styles.splineContainer}>
-            <Canvas>
-              <Scene />
-            </Canvas>
-          </div> */}
           <div className={styles.blobContainer}>
             <svg className={styles.blob} viewBox="0 0 1190 540" xmlns="http://www.w3.org/2000/svg">
               <g className={styles.blobGrey}>
