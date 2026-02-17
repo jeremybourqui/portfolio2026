@@ -18,6 +18,15 @@
     
 }
 
+.splineContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
 .blobContainer {
     position: absolute;
     top: 50%;
@@ -38,6 +47,7 @@
 .blobdk {
     transform: translate(440px, 270px);
     transition: transform 0.3s ease;
+    /* filter: url(#emboss) url(#inset-shadow); */
 
     @media screen and (max-width: 768px) {
         transform: translate(200px, 270px);
@@ -45,13 +55,17 @@
 }
 
 .blobGrey {
-    transform: translate(470px, 20px) scaleX(1.29) scaleY(1.35);
+    transform: translate(470px, 20px);
     transition: transform 0.3s ease;
-    height: 210px;
+    /* filter: url(#emboss) url(#inset-shadow); */
 
     @media screen and (max-width: 768px) {
         transform: translate(200px, 270px);
     }
+}
+
+.blobMain {
+    /* filter: url(#emboss) url(#inset-shadow); */
 }
 
 .textContent {

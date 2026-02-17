@@ -43,6 +43,7 @@
     padding: 8px;
     font-size: var(--text-lg);
     color: var(--color-background-strong);
+    /* filter: url(#emboss) url(#inset-shadow); */
 }
 
 .menuList a:visited {
