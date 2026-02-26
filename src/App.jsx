@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import ProjectDetail from './pages/ProjectDetail';
-import SvgFilters from './components/SvgFilters/SvgFilters';
+import DepthDitherFilter from './components/SvgFilters/DepthDitherFilter';
 
 function App() {
   return (
     <BrowserRouter>
-      <SvgFilters />
+      <DepthDitherFilter />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />

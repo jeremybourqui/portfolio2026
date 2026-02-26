@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tetromino Depth — SVG Dithered</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anybody:wght@300;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #EEF0F2;
+    font-family: 'Anybody', sans-serif;
+    overflow: hidden;
+  }
+
+  h1 {
+    color: #ffffff08;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .canvas-wrap { position: relative; z-index: 1; }
+
+  svg {
+    display: block;
+    width: 96vw;
+    height: 90vh;
+    max-width: 1200px;
+    max-height: 700px;
+  }
+
+  .piece {
+    cursor: grab;
+  }
+
+  .label {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #ffffff18;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ================================ */
+  /*  CONTROLS                        */
+  /* ================================ */
+  .controls {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 10;
+    background: #18181f;
+    padding: 22px 24px;
+    border-radius: 14px;
+    box-shadow:
+      6px 8px 24px rgba(0,0,0,0.6),
+      2px 3px 8px rgba(0,0,0,0.4),
+      inset 3px 3px 8px rgba(0,0,0,0.5),
+      inset -2px -2px 6px rgba(255,255,255,0.04);
+    border: 1px solid #ffffff08;
+    min-width: 200px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .controls::-webkit-scrollbar { width: 3px; }
+  .controls::-webkit-scrollbar-thumb { background: #ffffff15; border-radius: 2px; }
+  .section-label {
+    color: #ffffff20;
+    font-size: 0.5rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid #ffffff08;
+  }
+  .section-label:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+  .controls label {
+    color: #ffffff35;
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .controls label span.val {
+    color: #ffffff20;
+    font-size: 0.52rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .controls input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    background: #ffffff12;
+    border-radius: 2px;
+    outline: none;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.4);
+  }
+  .controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #2a2a38;
+    cursor: pointer;
+    box-shadow:
+      2px 3px 8px rgba(0,0,0,0.5),
+      inset 1px 1px 3px rgba(255,255,255,0.08),
+      inset -1px -1px 2px rgba(0,0,0,0.3);
+    border: 1px solid #ffffff10;
+  }
+  .controls select {
+    background: #1e1e2a;
+    color: #ffffff55;
+    border: 1px solid #ffffff10;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Anybody', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    outline: none;
+    cursor: pointer;
+    box-shadow:
+      3px 4px 12px rgba(0,0,0,0.45),
+      inset 2px 2px 5px rgba(0,0,0,0.35),
+      inset -1px -1px 4px rgba(255,255,255,0.04);
+  }
+  .controls select:hover { border-color: #ffffff20; background: #222230; }
+  .ctrl-row { display: flex; flex-direction: column; gap: 5px; }
+  .controls input[type="color"] {
+    -webkit-appearance: none;
+    border: 1px solid #ffffff10;
+    background: #1e1e2a;
+    width: 100%;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow:
+      3px 4px 12px rgba(0,0,0,0.45),
+      inset 2px 2px 5px rgba(0,0,0,0.35),
+      inset -1px -1px 4px rgba(255,255,255,0.04);
+  }
+  .controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+  .controls input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+  .piece.dragging { cursor: grabbing; }
+  .controls button {
+    background: #1e1e2a;
+    color: #ffffff55;
+    border: 1px solid #ffffff10;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: 'Anybody', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 4px;
+    box-shadow:
+      3px 4px 12px rgba(0,0,0,0.45),
+      inset 2px 2px 5px rgba(0,0,0,0.35),
+      inset -1px -1px 4px rgba(255,255,255,0.04);
+  }
+  .controls button:hover { border-color: #ffffff20; background: #222230; }
+</style>
+</head>
+<body>
+
+<h1>DEPTH</h1>
+
+<div class="canvas-wrap">
+  <!-- Larger viewBox: 1200 × 800 -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+    <defs>
+
+      <!-- FULL: depth + dither -->
+      <filter id="depthDither" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+        <feGaussianBlur in="SourceAlpha" id="outerBlurNode" stdDeviation="0" result="outerBlur"/>
+        <feOffset in="outerBlur" id="outerOffsetNode" dx="0" dy="0" result="outerOffset"/>
+        <feFlood flood-color="#000" id="outerFloodNode" flood-opacity="0" result="outerColor"/>
+        <feComposite in="outerColor" in2="outerOffset" operator="in" result="outerDrop"/>
+
+        <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="1" seed="2" id="shTurbNode" result="shNoise"/>
+        <feComponentTransfer in="shNoise" result="shDither">
+          <feFuncA type="discrete" tableValues="0 0.3 0.8 1 1 0.8 0.3 0"/>
+        </feComponentTransfer>
+        <feComposite in="outerDrop" in2="shDither" operator="in" result="ditheredOuterDrop"/>
+
+        <feComponentTransfer in="SourceAlpha" result="inv">
+          <feFuncA type="table" tableValues="1 0"/>
+        </feComponentTransfer>
+        <feOffset dx="0" dy="0" in="inv" result="invOff" id="innerDarkOffsetNode"/>
+        <feGaussianBlur in="invOff" stdDeviation="0" result="invBlur" id="innerDarkBlurNode"/>
+        <feComposite in="invBlur" in2="SourceAlpha" operator="in" result="innerDark"/>
+        <feFlood flood-color="#000" id="innerDarkFloodNode" flood-opacity="0" result="dkColor"/>
+        <feComposite in="dkColor" in2="innerDark" operator="in" result="innerDkShadow"/>
+
+        <feComponentTransfer in="SourceAlpha" result="inv2">
+          <feFuncA type="table" tableValues="1 0"/>
+        </feComponentTransfer>
+        <feOffset dx="0" dy="0" in="inv2" result="invOff2" id="innerLightOffsetNode"/>
+        <feGaussianBlur in="invOff2" stdDeviation="0" result="invBlur2" id="innerLightBlurNode"/>
+        <feComposite in="invBlur2" in2="SourceAlpha" operator="in" result="innerLight"/>
+        <feFlood flood-color="#fff" id="innerLightFloodNode" flood-opacity="0" result="ltColor"/>
+        <feComposite in="ltColor" in2="innerLight" operator="in" result="innerLtShadow"/>
+
+        <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="1" seed="2" id="surfTurbNode" result="surfNoise"/>
+        <feComponentTransfer in="surfNoise" result="surfDither">
+          <feFuncR type="discrete" tableValues="0 0 0 1 1" id="surfFuncR"/>
+          <feFuncG type="discrete" tableValues="0 0 0 1 1" id="surfFuncG"/>
+          <feFuncB type="discrete" tableValues="0 0 0 1 1" id="surfFuncB"/>
+          <feFuncA type="linear" slope="0" intercept="0"/>
+        </feComponentTransfer>
+        <feComposite in="surfDither" in2="SourceAlpha" operator="in" result="clippedDither"/>
+
+        <!-- Edge mask: dither fades toward center -->
+        <feMorphology in="SourceAlpha" operator="erode" radius="0" id="ditherErodeNode" result="eroded"/>
+        <feComposite in="SourceAlpha" in2="eroded" operator="out" result="edgeRing"/>
+        <feGaussianBlur in="edgeRing" stdDeviation="0" id="ditherSpreadNode" result="edgeMask"/>
+        <feComposite in="clippedDither" in2="edgeMask" operator="in" result="maskedDither"/>
+
+        <feMerge>
+          <feMergeNode in="ditheredOuterDrop"/>
+          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode in="innerDkShadow"/>
+          <feMergeNode in="innerLtShadow"/>
+          <feMergeNode in="maskedDither"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Hero blobs (same shapes & colors as Hero component) -->
+
+    <!-- 1. blobGrey — back layer -->
+    <g class="piece" filter="url(#depthDither)" transform="translate(475, 150)">
+      <path d="M 280 45 L 280 26 Q 280 0 300 0 L 400 0 Q 420 0 420 26 L 420 64 Q 420 90 440 90 L 540 90 Q 560 90 580 90 L 680 90 Q 700 90 700 116 L 700 154 Q 700 180 680 180 L 580 180 Q 560 180 560 206 L 560 244 Q 560 270 540 270 L 440 270 Q 420 270 400 270 L 300 270 Q 280 270 260 270 L 160 270 Q 140 270 120 270 L 20 270 Q 0 270 0 244 L 0 206 Q 0 180 0 154 L 0 116 Q 0 90 20 90 L 120 90 Q 140 90 160 90 L 260 90 Q 280 90 280 64 Z" fill="#333745"/>
+    </g>
+
+    <!-- 2. blobdk — middle layer -->
+    <g class="piece" filter="url(#depthDither)" transform="translate(445, 400)">
+      <path d="M0,0L130,0C150,0 150,0 170,0L280,0C300,0 300,0 320,0L430,0C450,0 450,0 470,0L580,0C600,0 600,0 620,0L730,0C750,0 750,20 750,20L750,70C750,90 730,90 730,90L620,90C600,90 600,110 600,110L600,160C600,180 580,180 580,180L470,180C450,180 450,200 450,200L450,250C450,270 430,270 430,270L320,270C300,270 300,250 300,250L300,200C300,180 280,180 280,180L170,180C150,180 150,160 150,160L150,110C150,90 130,90 130,90L20,90C0,90 0,70 0,70L0,20C0,0 20,0 20,0Z" fill="#156e89"/>
+    </g>
+
+    <!-- 3. blobMain — front layer -->
+    <g class="piece" filter="url(#depthDither)" transform="translate(5, 130)">
+      <path d="M 150 45 L 150 20 Q 150 0 170 0 L 280 0 Q 300 0 320 0 L 430 0 Q 450 0 470 0 L 580 0 Q 600 0 600 20 L 600 70 Q 600 90 620 90 L 730 90 Q 750 90 750 110 L 750 160 Q 750 180 770 180 L 880 180 Q 900 180 900 200 L 900 250 Q 900 270 880 270 L 770 270 Q 750 270 750 290 L 750 340 Q 750 360 730 360 L 620 360 Q 600 360 580 360 L 470 360 Q 450 360 450 380 L 450 430 Q 450 450 430 450 L 320 450 Q 300 450 280 450 L 170 450 Q 150 450 150 430 L 150 380 Q 150 360 130 360 L 20 360 Q 0 360 0 340 L 0 290 Q 0 270 0 250 L 0 200 Q 0 180 0 160 L 0 110 Q 0 90 20 90 L 130 90 Q 150 90 150 70 Z" fill="#90cee0"/>
+    </g>
+
+  </svg>
+  <div class="label">SVG filters · depth shadows + dithering</div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="section-label" style="border:none; margin:0; padding:0;">Dither</div>
+  <div class="ctrl-row">
+    <label>Pattern</label>
+    <select id="ditherMode">
+      <option value="fine" selected>Fine stipple</option>
+      <option value="coarse">Coarse halftone</option>
+      <option value="ordered">Ordered / Bayer-ish</option>
+    </select>
+  </div>
+  <div class="ctrl-row">
+    <label>Frequency <span class="val" id="ditherFreqVal">0.10</span></label>
+    <input type="range" id="ditherFreq" min="0.1" max="5" step="0.1" value="0.1">
+  </div>
+  <div class="ctrl-row">
+    <label>Octaves <span class="val" id="ditherOctVal">1</span></label>
+    <input type="range" id="ditherOct" min="1" max="5" step="1" value="1">
+  </div>
+  <div class="ctrl-row">
+    <label>Intensity <span class="val" id="ditherVal">0</span></label>
+    <input type="range" id="ditherIntensity" min="0" max="1" step="0.01" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Edge depth <span class="val" id="ditherErodeVal">0</span></label>
+    <input type="range" id="ditherErode" min="0" max="100" step="1" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Edge spread <span class="val" id="ditherSpreadVal">0</span></label>
+    <input type="range" id="ditherSpread" min="0" max="100" step="0.5" value="0">
+  </div>
+
+  <div class="section-label">Light Source</div>
+  <div class="ctrl-row">
+    <label>Angle <span class="val" id="lightAngleVal">0°</span></label>
+    <input type="range" id="lightAngle" min="0" max="360" step="1" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Distance <span class="val" id="lightDistVal">0</span></label>
+    <input type="range" id="lightDist" min="0" max="20" step="0.5" value="0">
+  </div>
+
+  <div class="section-label">Outer Shadow</div>
+  <div class="ctrl-row">
+    <label>Blur <span class="val" id="outerBlurVal">0</span></label>
+    <input type="range" id="outerBlur" min="0" max="50" step="0.5" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Opacity <span class="val" id="outerOpVal">0</span></label>
+    <input type="range" id="outerOp" min="0" max="1" step="0.01" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Depth <span class="val" id="outerDepthVal">0</span></label>
+    <input type="range" id="outerDepth" min="0" max="5" step="0.1" value="0">
+  </div>
+
+  <div class="section-label">Inner Shadow</div>
+  <div class="ctrl-row">
+    <label>Depth <span class="val" id="innerDepthVal">0</span></label>
+    <input type="range" id="innerDepth" min="0" max="10" step="0.1" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Dark blur <span class="val" id="innerDkBlurVal">0</span></label>
+    <input type="range" id="innerDkBlur" min="0" max="50" step="0.5" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Dark opacity <span class="val" id="innerDkOpVal">0</span></label>
+    <input type="range" id="innerDkOp" min="0" max="1" step="0.01" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Light blur <span class="val" id="innerLtBlurVal">0</span></label>
+    <input type="range" id="innerLtBlur" min="0" max="50" step="0.5" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Light opacity <span class="val" id="innerLtOpVal">0</span></label>
+    <input type="range" id="innerLtOp" min="0" max="1" step="0.01" value="0">
+  </div>
+
+  <div class="section-label">Background</div>
+  <div class="ctrl-row">
+    <label>Color</label>
+    <input type="color" id="bgColor" value="#EEF0F2">
+  </div>
+
+  <button id="copySettings">Copy Settings</button>
+</div>
+
+<script>
+  const pieces = document.querySelectorAll('.piece');
+  const svg = document.querySelector('svg');
+
+  /* ── Drag state ── */
+  let dragPiece = null;
+  let dragOffset = { x: 0, y: 0 };
+  // Store per-piece drag translation
+  const dragPos = new Map();
+  pieces.forEach(p => dragPos.set(p, { x: 0, y: 0 }));
+
+  function svgPoint(clientX, clientY) {
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  function onDragStart(e) {
+    e.preventDefault();
+    const evt = e.touches ? e.touches[0] : e;
+    const piece = e.currentTarget;
+    dragPiece = piece;
+    dragPiece.classList.add('dragging');
+    // Bring to front
+    dragPiece.parentNode.appendChild(dragPiece);
+    const pt = svgPoint(evt.clientX, evt.clientY);
+    const pos = dragPos.get(piece);
+    dragOffset.x = pt.x - pos.x;
+    dragOffset.y = pt.y - pos.y;
+  }
+
+  function onDragMove(e) {
+    if (!dragPiece) return;
+    const evt = e.touches ? e.touches[0] : e;
+    const pt = svgPoint(evt.clientX, evt.clientY);
+    const pos = dragPos.get(dragPiece);
+    pos.x = pt.x - dragOffset.x;
+    pos.y = pt.y - dragOffset.y;
+    dragPiece.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+  }
+
+  function onDragEnd() {
+    if (!dragPiece) return;
+    dragPiece.classList.remove('dragging');
+    dragPiece = null;
+  }
+
+  pieces.forEach(p => {
+    p.addEventListener('mousedown', onDragStart);
+    p.addEventListener('touchstart', onDragStart, { passive: false });
+  });
+  document.addEventListener('mousemove', onDragMove);
+  document.addEventListener('touchmove', onDragMove, { passive: false });
+  document.addEventListener('mouseup', onDragEnd);
+  document.addEventListener('touchend', onDragEnd);
+
+  /* ── Controls ── */
+  const $ = id => document.getElementById(id);
+
+  function bind(sliderId, valId, cb) {
+    const slider = $(sliderId);
+    const valSpan = $(valId);
+    slider.addEventListener('input', () => {
+      const v = parseFloat(slider.value);
+      valSpan.textContent = v % 1 === 0 ? v : v.toFixed(2);
+      cb(v);
+    });
+  }
+
+  /* ── Dither pattern presets ── */
+  const ditherPresets = {
+    fine:    { type: 'turbulence',    freq: 1.8, oct: 1, seed: 2, table: '0 0 0 1 1' },
+    coarse:  { type: 'turbulence',    freq: 0.7, oct: 2, seed: 5, table: '0 1' },
+    ordered: { type: 'fractalNoise',  freq: 3.5, oct: 1, seed: 9, table: '0 0 1 1 0 0 1' },
+  };
+
+  function applyDitherPreset(key) {
+    const p = ditherPresets[key];
+    const turb = $('surfTurbNode');
+    turb.setAttribute('type', p.type);
+    turb.setAttribute('baseFrequency', p.freq);
+    turb.setAttribute('numOctaves', p.oct);
+    turb.setAttribute('seed', p.seed);
+    ['surfFuncR', 'surfFuncG', 'surfFuncB'].forEach(id => $(id).setAttribute('tableValues', p.table));
+    // Sync shadow dither turbulence
+    const shTurb = $('shTurbNode');
+    shTurb.setAttribute('type', p.type);
+    shTurb.setAttribute('baseFrequency', p.freq);
+    shTurb.setAttribute('numOctaves', p.oct);
+    shTurb.setAttribute('seed', p.seed);
+    // Sync sliders
+    $('ditherFreq').value = p.freq;
+    $('ditherFreqVal').textContent = p.freq.toFixed(2);
+    $('ditherOct').value = p.oct;
+    $('ditherOctVal').textContent = p.oct;
+  }
+
+  $('ditherMode').addEventListener('change', () => applyDitherPreset($('ditherMode').value));
+
+  bind('ditherFreq', 'ditherFreqVal', v => { $('surfTurbNode').setAttribute('baseFrequency', v); $('shTurbNode').setAttribute('baseFrequency', v); });
+  bind('ditherOct', 'ditherOctVal', v => { $('surfTurbNode').setAttribute('numOctaves', v); $('shTurbNode').setAttribute('numOctaves', v); });
+
+  bind('ditherIntensity', 'ditherVal', (val) => {
+    const f = document.getElementById('depthDither');
+    if (!f) return;
+    f.querySelectorAll('feComponentTransfer').forEach(ct => {
+      const fa = ct.querySelector('feFuncA[type="linear"]');
+      if (fa) fa.setAttribute('slope', val);
+    });
+  });
+
+  bind('ditherErode', 'ditherErodeVal', v => $('ditherErodeNode').setAttribute('radius', v));
+  bind('ditherSpread', 'ditherSpreadVal', v => $('ditherSpreadNode').setAttribute('stdDeviation', v));
+
+  /* ── Light source ── */
+  function updateLightSource() {
+    const angleDeg = parseFloat($('lightAngle').value);
+    const dist = parseFloat($('lightDist').value);
+    const a = angleDeg * Math.PI / 180;
+    // Outer shadow: cast away from light
+    const outerDepth = parseFloat($('outerDepth').value);
+    const outerDx = -dist * outerDepth * Math.cos(a);
+    const outerDy = -dist * outerDepth * Math.sin(a);
+    $('outerOffsetNode').setAttribute('dx', outerDx.toFixed(1));
+    $('outerOffsetNode').setAttribute('dy', outerDy.toFixed(1));
+    // Inner dark shadow: on far edge (away from light)
+    const innerDist = dist * parseFloat($('innerDepth').value);
+    $('innerDarkOffsetNode').setAttribute('dx', (innerDist * Math.cos(a)).toFixed(1));
+    $('innerDarkOffsetNode').setAttribute('dy', (innerDist * Math.sin(a)).toFixed(1));
+    // Inner light highlight: on exposed edge (toward light)
+    $('innerLightOffsetNode').setAttribute('dx', (-innerDist * 0.7 * Math.cos(a)).toFixed(1));
+    $('innerLightOffsetNode').setAttribute('dy', (-innerDist * 0.7 * Math.sin(a)).toFixed(1));
+    // Update display values
+    $('lightAngleVal').textContent = angleDeg + '°';
+    $('lightDistVal').textContent = dist % 1 === 0 ? dist : dist.toFixed(1);
+  }
+
+  $('lightAngle').addEventListener('input', updateLightSource);
+  $('lightDist').addEventListener('input', updateLightSource);
+
+  bind('outerBlur', 'outerBlurVal', v => $('outerBlurNode').setAttribute('stdDeviation', v));
+  bind('outerOp', 'outerOpVal', v => $('outerFloodNode').setAttribute('flood-opacity', v));
+
+  $('outerDepth').addEventListener('input', () => {
+    $('outerDepthVal').textContent = parseFloat($('outerDepth').value).toFixed(2);
+    updateLightSource();
+  });
+
+  $('innerDepth').addEventListener('input', () => {
+    $('innerDepthVal').textContent = parseFloat($('innerDepth').value).toFixed(2);
+    updateLightSource();
+  });
+
+  bind('innerDkBlur', 'innerDkBlurVal', v => $('innerDarkBlurNode').setAttribute('stdDeviation', v));
+  bind('innerDkOp', 'innerDkOpVal', v => $('innerDarkFloodNode').setAttribute('flood-opacity', v));
+  bind('innerLtBlur', 'innerLtBlurVal', v => $('innerLightBlurNode').setAttribute('stdDeviation', v));
+  bind('innerLtOp', 'innerLtOpVal', v => $('innerLightFloodNode').setAttribute('flood-opacity', v));
+
+  /* ── Background color ── */
+  $('bgColor').addEventListener('input', (e) => {
+    document.body.style.background = e.target.value;
+  });
+
+  /* ── Copy settings ── */
+  $('copySettings').addEventListener('click', () => {
+    const settings = {
+      ditherMode: $('ditherMode').value,
+      ditherFreq: parseFloat($('ditherFreq').value),
+      ditherOctaves: parseInt($('ditherOct').value),
+      ditherIntensity: parseFloat($('ditherIntensity').value),
+      ditherErode: parseFloat($('ditherErode').value),
+      ditherSpread: parseFloat($('ditherSpread').value),
+      lightAngle: parseFloat($('lightAngle').value),
+      lightDist: parseFloat($('lightDist').value),
+      outerBlur: parseFloat($('outerBlur').value),
+      outerOpacity: parseFloat($('outerOp').value),
+      outerDepth: parseFloat($('outerDepth').value),
+      innerDepth: parseFloat($('innerDepth').value),
+      innerDarkBlur: parseFloat($('innerDkBlur').value),
+      innerDarkOpacity: parseFloat($('innerDkOp').value),
+      innerLightBlur: parseFloat($('innerLtBlur').value),
+      innerLightOpacity: parseFloat($('innerLtOp').value),
+      bgColor: $('bgColor').value
+    };
+    navigator.clipboard.writeText(JSON.stringify(settings, null, 2)).then(() => {
+      const btn = $('copySettings');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Settings'; }, 1500);
+    });
+  });
+</script>
+</body>
+</html>

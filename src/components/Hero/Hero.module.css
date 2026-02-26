@@ -47,7 +47,7 @@
 .blobdk {
     transform: translate(440px, 270px);
     transition: transform 0.3s ease;
-    /* filter: url(#emboss) url(#inset-shadow); */
+    /* filter: url(#depthDither); */
 
     @media screen and (max-width: 768px) {
         transform: translate(200px, 270px);
@@ -57,7 +57,7 @@
 .blobGrey {
     transform: translate(470px, 20px);
     transition: transform 0.3s ease;
-    /* filter: url(#emboss) url(#inset-shadow); */
+    /* filter: url(#depthDither); */
 
     @media screen and (max-width: 768px) {
         transform: translate(200px, 270px);
@@ -65,7 +65,7 @@
 }
 
 .blobMain {
-    /* filter: url(#emboss) url(#inset-shadow); */
+    /* filter: url(#depthDither); */
 }
 
 .textContent {
