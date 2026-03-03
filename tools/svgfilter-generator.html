@@ -196,18 +196,12 @@
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
     <defs>
 
-      <!-- FULL: depth + dither -->
+      <!-- Depth shadows filter -->
       <filter id="depthDither" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
         <feGaussianBlur in="SourceAlpha" id="outerBlurNode" stdDeviation="0" result="outerBlur"/>
         <feOffset in="outerBlur" id="outerOffsetNode" dx="0" dy="0" result="outerOffset"/>
         <feFlood flood-color="#000" id="outerFloodNode" flood-opacity="0" result="outerColor"/>
         <feComposite in="outerColor" in2="outerOffset" operator="in" result="outerDrop"/>
-
-        <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="1" seed="2" id="shTurbNode" result="shNoise"/>
-        <feComponentTransfer in="shNoise" result="shDither">
-          <feFuncA type="discrete" tableValues="0 0.3 0.8 1 1 0.8 0.3 0"/>
-        </feComponentTransfer>
-        <feComposite in="outerDrop" in2="shDither" operator="in" result="ditheredOuterDrop"/>
 
         <feComponentTransfer in="SourceAlpha" result="inv">
           <feFuncA type="table" tableValues="1 0"/>
@@ -227,27 +221,11 @@
         <feFlood flood-color="#fff" id="innerLightFloodNode" flood-opacity="0" result="ltColor"/>
         <feComposite in="ltColor" in2="innerLight" operator="in" result="innerLtShadow"/>
 
-        <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="1" seed="2" id="surfTurbNode" result="surfNoise"/>
-        <feComponentTransfer in="surfNoise" result="surfDither">
-          <feFuncR type="discrete" tableValues="0 0 0 1 1" id="surfFuncR"/>
-          <feFuncG type="discrete" tableValues="0 0 0 1 1" id="surfFuncG"/>
-          <feFuncB type="discrete" tableValues="0 0 0 1 1" id="surfFuncB"/>
-          <feFuncA type="linear" slope="0" intercept="0"/>
-        </feComponentTransfer>
-        <feComposite in="surfDither" in2="SourceAlpha" operator="in" result="clippedDither"/>
-
-        <!-- Edge mask: dither fades toward center -->
-        <feMorphology in="SourceAlpha" operator="erode" radius="0" id="ditherErodeNode" result="eroded"/>
-        <feComposite in="SourceAlpha" in2="eroded" operator="out" result="edgeRing"/>
-        <feGaussianBlur in="edgeRing" stdDeviation="0" id="ditherSpreadNode" result="edgeMask"/>
-        <feComposite in="clippedDither" in2="edgeMask" operator="in" result="maskedDither"/>
-
         <feMerge>
-          <feMergeNode in="ditheredOuterDrop"/>
+          <feMergeNode in="outerDrop"/>
           <feMergeNode in="SourceGraphic"/>
           <feMergeNode in="innerDkShadow"/>
           <feMergeNode in="innerLtShadow"/>
-          <feMergeNode in="maskedDither"/>
         </feMerge>
       </filter>
     </defs>
@@ -270,42 +248,12 @@
     </g>
 
   </svg>
-  <div class="label">SVG filters · depth shadows + dithering</div>
+  <div class="label">SVG filters · depth shadows</div>
 </div>
 
 <!-- Controls -->
 <div class="controls">
-  <div class="section-label" style="border:none; margin:0; padding:0;">Dither</div>
-  <div class="ctrl-row">
-    <label>Pattern</label>
-    <select id="ditherMode">
-      <option value="fine" selected>Fine stipple</option>
-      <option value="coarse">Coarse halftone</option>
-      <option value="ordered">Ordered / Bayer-ish</option>
-    </select>
-  </div>
-  <div class="ctrl-row">
-    <label>Frequency <span class="val" id="ditherFreqVal">0.10</span></label>
-    <input type="range" id="ditherFreq" min="0.1" max="5" step="0.1" value="0.1">
-  </div>
-  <div class="ctrl-row">
-    <label>Octaves <span class="val" id="ditherOctVal">1</span></label>
-    <input type="range" id="ditherOct" min="1" max="5" step="1" value="1">
-  </div>
-  <div class="ctrl-row">
-    <label>Intensity <span class="val" id="ditherVal">0</span></label>
-    <input type="range" id="ditherIntensity" min="0" max="1" step="0.01" value="0">
-  </div>
-  <div class="ctrl-row">
-    <label>Edge depth <span class="val" id="ditherErodeVal">0</span></label>
-    <input type="range" id="ditherErode" min="0" max="100" step="1" value="0">
-  </div>
-  <div class="ctrl-row">
-    <label>Edge spread <span class="val" id="ditherSpreadVal">0</span></label>
-    <input type="range" id="ditherSpread" min="0" max="100" step="0.5" value="0">
-  </div>
-
-  <div class="section-label">Light Source</div>
+  <div class="section-label" style="border:none; margin:0; padding:0;">Inner Light Source</div>
   <div class="ctrl-row">
     <label>Angle <span class="val" id="lightAngleVal">0°</span></label>
     <input type="range" id="lightAngle" min="0" max="360" step="1" value="0">
@@ -327,6 +275,14 @@
   <div class="ctrl-row">
     <label>Depth <span class="val" id="outerDepthVal">0</span></label>
     <input type="range" id="outerDepth" min="0" max="5" step="0.1" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Angle <span class="val" id="outerAngleVal">0°</span></label>
+    <input type="range" id="outerAngle" min="0" max="360" step="1" value="0">
+  </div>
+  <div class="ctrl-row">
+    <label>Distance <span class="val" id="outerDistVal">0</span></label>
+    <input type="range" id="outerDist" min="0" max="20" step="0.5" value="0">
   </div>
 
   <div class="section-label">Inner Shadow</div>
@@ -430,89 +386,46 @@
     });
   }
 
-  /* ── Dither pattern presets ── */
-  const ditherPresets = {
-    fine:    { type: 'turbulence',    freq: 1.8, oct: 1, seed: 2, table: '0 0 0 1 1' },
-    coarse:  { type: 'turbulence',    freq: 0.7, oct: 2, seed: 5, table: '0 1' },
-    ordered: { type: 'fractalNoise',  freq: 3.5, oct: 1, seed: 9, table: '0 0 1 1 0 0 1' },
-  };
-
-  function applyDitherPreset(key) {
-    const p = ditherPresets[key];
-    const turb = $('surfTurbNode');
-    turb.setAttribute('type', p.type);
-    turb.setAttribute('baseFrequency', p.freq);
-    turb.setAttribute('numOctaves', p.oct);
-    turb.setAttribute('seed', p.seed);
-    ['surfFuncR', 'surfFuncG', 'surfFuncB'].forEach(id => $(id).setAttribute('tableValues', p.table));
-    // Sync shadow dither turbulence
-    const shTurb = $('shTurbNode');
-    shTurb.setAttribute('type', p.type);
-    shTurb.setAttribute('baseFrequency', p.freq);
-    shTurb.setAttribute('numOctaves', p.oct);
-    shTurb.setAttribute('seed', p.seed);
-    // Sync sliders
-    $('ditherFreq').value = p.freq;
-    $('ditherFreqVal').textContent = p.freq.toFixed(2);
-    $('ditherOct').value = p.oct;
-    $('ditherOctVal').textContent = p.oct;
+  /* ── Outer shadow light source ── */
+  function updateOuterShadow() {
+    const angleDeg = parseFloat($('outerAngle').value);
+    const dist = parseFloat($('outerDist').value);
+    const depth = parseFloat($('outerDepth').value);
+    const a = angleDeg * Math.PI / 180;
+    const dx = -dist * depth * Math.cos(a);
+    const dy = -dist * depth * Math.sin(a);
+    $('outerOffsetNode').setAttribute('dx', dx.toFixed(1));
+    $('outerOffsetNode').setAttribute('dy', dy.toFixed(1));
+    $('outerAngleVal').textContent = angleDeg + '°';
+    $('outerDistVal').textContent = dist % 1 === 0 ? dist : dist.toFixed(1);
+    $('outerDepthVal').textContent = depth.toFixed(2);
   }
 
-  $('ditherMode').addEventListener('change', () => applyDitherPreset($('ditherMode').value));
-
-  bind('ditherFreq', 'ditherFreqVal', v => { $('surfTurbNode').setAttribute('baseFrequency', v); $('shTurbNode').setAttribute('baseFrequency', v); });
-  bind('ditherOct', 'ditherOctVal', v => { $('surfTurbNode').setAttribute('numOctaves', v); $('shTurbNode').setAttribute('numOctaves', v); });
-
-  bind('ditherIntensity', 'ditherVal', (val) => {
-    const f = document.getElementById('depthDither');
-    if (!f) return;
-    f.querySelectorAll('feComponentTransfer').forEach(ct => {
-      const fa = ct.querySelector('feFuncA[type="linear"]');
-      if (fa) fa.setAttribute('slope', val);
-    });
-  });
-
-  bind('ditherErode', 'ditherErodeVal', v => $('ditherErodeNode').setAttribute('radius', v));
-  bind('ditherSpread', 'ditherSpreadVal', v => $('ditherSpreadNode').setAttribute('stdDeviation', v));
-
-  /* ── Light source ── */
-  function updateLightSource() {
+  /* ── Inner shadow light source ── */
+  function updateInnerShadow() {
     const angleDeg = parseFloat($('lightAngle').value);
     const dist = parseFloat($('lightDist').value);
     const a = angleDeg * Math.PI / 180;
-    // Outer shadow: cast away from light
-    const outerDepth = parseFloat($('outerDepth').value);
-    const outerDx = -dist * outerDepth * Math.cos(a);
-    const outerDy = -dist * outerDepth * Math.sin(a);
-    $('outerOffsetNode').setAttribute('dx', outerDx.toFixed(1));
-    $('outerOffsetNode').setAttribute('dy', outerDy.toFixed(1));
-    // Inner dark shadow: on far edge (away from light)
     const innerDist = dist * parseFloat($('innerDepth').value);
     $('innerDarkOffsetNode').setAttribute('dx', (innerDist * Math.cos(a)).toFixed(1));
     $('innerDarkOffsetNode').setAttribute('dy', (innerDist * Math.sin(a)).toFixed(1));
-    // Inner light highlight: on exposed edge (toward light)
     $('innerLightOffsetNode').setAttribute('dx', (-innerDist * 0.7 * Math.cos(a)).toFixed(1));
     $('innerLightOffsetNode').setAttribute('dy', (-innerDist * 0.7 * Math.sin(a)).toFixed(1));
-    // Update display values
     $('lightAngleVal').textContent = angleDeg + '°';
     $('lightDistVal').textContent = dist % 1 === 0 ? dist : dist.toFixed(1);
+    $('innerDepthVal').textContent = parseFloat($('innerDepth').value).toFixed(2);
   }
 
-  $('lightAngle').addEventListener('input', updateLightSource);
-  $('lightDist').addEventListener('input', updateLightSource);
+  $('outerAngle').addEventListener('input', updateOuterShadow);
+  $('outerDist').addEventListener('input', updateOuterShadow);
+  $('outerDepth').addEventListener('input', updateOuterShadow);
+
+  $('lightAngle').addEventListener('input', updateInnerShadow);
+  $('lightDist').addEventListener('input', updateInnerShadow);
+  $('innerDepth').addEventListener('input', updateInnerShadow);
 
   bind('outerBlur', 'outerBlurVal', v => $('outerBlurNode').setAttribute('stdDeviation', v));
   bind('outerOp', 'outerOpVal', v => $('outerFloodNode').setAttribute('flood-opacity', v));
-
-  $('outerDepth').addEventListener('input', () => {
-    $('outerDepthVal').textContent = parseFloat($('outerDepth').value).toFixed(2);
-    updateLightSource();
-  });
-
-  $('innerDepth').addEventListener('input', () => {
-    $('innerDepthVal').textContent = parseFloat($('innerDepth').value).toFixed(2);
-    updateLightSource();
-  });
 
   bind('innerDkBlur', 'innerDkBlurVal', v => $('innerDarkBlurNode').setAttribute('stdDeviation', v));
   bind('innerDkOp', 'innerDkOpVal', v => $('innerDarkFloodNode').setAttribute('flood-opacity', v));
@@ -527,17 +440,13 @@
   /* ── Copy settings ── */
   $('copySettings').addEventListener('click', () => {
     const settings = {
-      ditherMode: $('ditherMode').value,
-      ditherFreq: parseFloat($('ditherFreq').value),
-      ditherOctaves: parseInt($('ditherOct').value),
-      ditherIntensity: parseFloat($('ditherIntensity').value),
-      ditherErode: parseFloat($('ditherErode').value),
-      ditherSpread: parseFloat($('ditherSpread').value),
       lightAngle: parseFloat($('lightAngle').value),
       lightDist: parseFloat($('lightDist').value),
       outerBlur: parseFloat($('outerBlur').value),
       outerOpacity: parseFloat($('outerOp').value),
       outerDepth: parseFloat($('outerDepth').value),
+      outerAngle: parseFloat($('outerAngle').value),
+      outerDist: parseFloat($('outerDist').value),
       innerDepth: parseFloat($('innerDepth').value),
       innerDarkBlur: parseFloat($('innerDkBlur').value),
       innerDarkOpacity: parseFloat($('innerDkOp').value),
