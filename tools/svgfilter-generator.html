@@ -72,33 +72,31 @@
     flex-direction: column;
     gap: 14px;
     z-index: 10;
-    background: #18181f;
+    background: #f5f5f7;
     padding: 22px 24px;
     border-radius: 14px;
     box-shadow:
-      6px 8px 24px rgba(0,0,0,0.6),
-      2px 3px 8px rgba(0,0,0,0.4),
-      inset 3px 3px 8px rgba(0,0,0,0.5),
-      inset -2px -2px 6px rgba(255,255,255,0.04);
-    border: 1px solid #ffffff08;
+      0 4px 16px rgba(0,0,0,0.1),
+      0 1px 4px rgba(0,0,0,0.08);
+    border: 1px solid #ddd;
     min-width: 200px;
     max-height: 90vh;
     overflow-y: auto;
   }
   .controls::-webkit-scrollbar { width: 3px; }
-  .controls::-webkit-scrollbar-thumb { background: #ffffff15; border-radius: 2px; }
+  .controls::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
   .section-label {
-    color: #ffffff20;
+    color: #333;
     font-size: 0.5rem;
     letter-spacing: 0.25em;
     text-transform: uppercase;
     margin-top: 6px;
     padding-top: 10px;
-    border-top: 1px solid #ffffff08;
+    border-top: 1px solid #ddd;
   }
   .section-label:first-child { margin-top: 0; padding-top: 0; border-top: none; }
   .controls label {
-    color: #ffffff35;
+    color: #555;
     font-size: 0.58rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -107,7 +105,7 @@
     align-items: center;
   }
   .controls label span.val {
-    color: #ffffff20;
+    color: #888;
     font-size: 0.52rem;
     font-variant-numeric: tabular-nums;
   }
@@ -115,28 +113,26 @@
     -webkit-appearance: none;
     width: 100%;
     height: 3px;
-    background: #ffffff12;
+    background: #ddd;
     border-radius: 2px;
     outline: none;
-    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.4);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
   }
   .controls input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #2a2a38;
+    background: #fff;
     cursor: pointer;
     box-shadow:
-      2px 3px 8px rgba(0,0,0,0.5),
-      inset 1px 1px 3px rgba(255,255,255,0.08),
-      inset -1px -1px 2px rgba(0,0,0,0.3);
-    border: 1px solid #ffffff10;
+      0 1px 3px rgba(0,0,0,0.15);
+    border: 1px solid #ccc;
   }
   .controls select {
-    background: #1e1e2a;
-    color: #ffffff55;
-    border: 1px solid #ffffff10;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
     border-radius: 6px;
     padding: 6px 10px;
     font-family: 'Anybody', sans-serif;
@@ -144,33 +140,27 @@
     letter-spacing: 0.08em;
     outline: none;
     cursor: pointer;
-    box-shadow:
-      3px 4px 12px rgba(0,0,0,0.45),
-      inset 2px 2px 5px rgba(0,0,0,0.35),
-      inset -1px -1px 4px rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-  .controls select:hover { border-color: #ffffff20; background: #222230; }
+  .controls select:hover { border-color: #999; background: #fafafa; }
   .ctrl-row { display: flex; flex-direction: column; gap: 5px; }
   .controls input[type="color"] {
     -webkit-appearance: none;
-    border: 1px solid #ffffff10;
-    background: #1e1e2a;
+    border: 1px solid #ccc;
+    background: #fff;
     width: 100%;
     height: 28px;
     border-radius: 6px;
     cursor: pointer;
-    box-shadow:
-      3px 4px 12px rgba(0,0,0,0.45),
-      inset 2px 2px 5px rgba(0,0,0,0.35),
-      inset -1px -1px 4px rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
   .controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
   .controls input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
   .piece.dragging { cursor: grabbing; }
   .controls button {
-    background: #1e1e2a;
-    color: #ffffff55;
-    border: 1px solid #ffffff10;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
     border-radius: 6px;
     padding: 8px 10px;
     font-family: 'Anybody', sans-serif;
@@ -179,12 +169,9 @@
     text-transform: uppercase;
     cursor: pointer;
     margin-top: 4px;
-    box-shadow:
-      3px 4px 12px rgba(0,0,0,0.45),
-      inset 2px 2px 5px rgba(0,0,0,0.35),
-      inset -1px -1px 4px rgba(255,255,255,0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-  .controls button:hover { border-color: #ffffff20; background: #222230; }
+  .controls button:hover { border-color: #999; background: #eee; }
 </style>
 </head>
 <body>
@@ -228,23 +215,81 @@
           <feMergeNode in="innerLtShadow"/>
         </feMerge>
       </filter>
+
+      <!-- Noise filters (darker shade per blob) -->
+      <filter id="noiseGrey" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise"/>
+        <feComponentTransfer in="noise" result="thresholded">
+          <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1"/>
+        </feComponentTransfer>
+        <feFlood id="noiseGreyFlood" flood-color="#333745" result="color"/>
+        <feComposite in="color" in2="thresholded" operator="in" result="noiseTex"/>
+        <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise"/>
+        <feMerge>
+          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode in="clippedNoise"/>
+        </feMerge>
+      </filter>
+      <filter id="noiseDk" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise"/>
+        <feComponentTransfer in="noise" result="thresholded">
+          <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1"/>
+        </feComponentTransfer>
+        <feFlood id="noiseDkFlood" flood-color="#156e89" result="color"/>
+        <feComposite in="color" in2="thresholded" operator="in" result="noiseTex"/>
+        <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise"/>
+        <feMerge>
+          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode in="clippedNoise"/>
+        </feMerge>
+      </filter>
+      <filter id="noiseMain" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise"/>
+        <feComponentTransfer in="noise" result="thresholded">
+          <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1"/>
+        </feComponentTransfer>
+        <feFlood id="noiseMainFlood" flood-color="#90cee0" result="color"/>
+        <feComposite in="color" in2="thresholded" operator="in" result="noiseTex"/>
+        <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise"/>
+        <feMerge>
+          <feMergeNode in="SourceGraphic"/>
+          <feMergeNode in="clippedNoise"/>
+        </feMerge>
+      </filter>
+      <!-- Radial gradients (elliptical, centered top) -->
+      <!-- r=ry, gradientTransform scales X by rx/ry to create ellipse -->
+      <radialGradient id="gradGrey" cx="0.5" cy="-0.18" r="1.18" fx="0.5" fy="-0.18" gradientUnits="objectBoundingBox"
+        gradientTransform="translate(0.5,-0.18) scale(0.627,1) translate(-0.5,0.18)">
+        <stop id="greyStop0" offset="0%" stop-color="#4a4f60"/>
+        <stop id="greyStop1" offset="100%" stop-color="#333745"/>
+      </radialGradient>
+      <radialGradient id="gradDk" cx="0.5" cy="-0.18" r="1.18" fx="0.5" fy="-0.18" gradientUnits="objectBoundingBox"
+        gradientTransform="translate(0.5,-0.18) scale(0.627,1) translate(-0.5,0.18)">
+        <stop id="dkStop0" offset="0%" stop-color="#1f8fae"/>
+        <stop id="dkStop1" offset="100%" stop-color="#156e89"/>
+      </radialGradient>
+      <radialGradient id="gradMain" cx="0.5" cy="-0.18" r="1.18" fx="0.5" fy="-0.18" gradientUnits="objectBoundingBox"
+        gradientTransform="translate(0.5,-0.18) scale(0.627,1) translate(-0.5,0.18)">
+        <stop id="mainStop0" offset="0%" stop-color="#b8e2ee"/>
+        <stop id="mainStop1" offset="100%" stop-color="#90cee0"/>
+      </radialGradient>
     </defs>
 
     <!-- Hero blobs (same shapes & colors as Hero component) -->
 
     <!-- 1. blobGrey — back layer -->
     <g class="piece" filter="url(#depthDither)" transform="translate(475, 150)">
-      <path d="M 280 45 L 280 26 Q 280 0 300 0 L 400 0 Q 420 0 420 26 L 420 64 Q 420 90 440 90 L 540 90 Q 560 90 580 90 L 680 90 Q 700 90 700 116 L 700 154 Q 700 180 680 180 L 580 180 Q 560 180 560 206 L 560 244 Q 560 270 540 270 L 440 270 Q 420 270 400 270 L 300 270 Q 280 270 260 270 L 160 270 Q 140 270 120 270 L 20 270 Q 0 270 0 244 L 0 206 Q 0 180 0 154 L 0 116 Q 0 90 20 90 L 120 90 Q 140 90 160 90 L 260 90 Q 280 90 280 64 Z" fill="#333745"/>
+      <path filter="url(#noiseGrey)" d="M 280 45 L 280 26 Q 280 0 300 0 L 400 0 Q 420 0 420 26 L 420 64 Q 420 90 440 90 L 540 90 Q 560 90 580 90 L 680 90 Q 700 90 700 116 L 700 154 Q 700 180 680 180 L 580 180 Q 560 180 560 206 L 560 244 Q 560 270 540 270 L 440 270 Q 420 270 400 270 L 300 270 Q 280 270 260 270 L 160 270 Q 140 270 120 270 L 20 270 Q 0 270 0 244 L 0 206 Q 0 180 0 154 L 0 116 Q 0 90 20 90 L 120 90 Q 140 90 160 90 L 260 90 Q 280 90 280 64 Z" fill="url(#gradGrey)"/>
     </g>
 
     <!-- 2. blobdk — middle layer -->
     <g class="piece" filter="url(#depthDither)" transform="translate(445, 400)">
-      <path d="M0,0L130,0C150,0 150,0 170,0L280,0C300,0 300,0 320,0L430,0C450,0 450,0 470,0L580,0C600,0 600,0 620,0L730,0C750,0 750,20 750,20L750,70C750,90 730,90 730,90L620,90C600,90 600,110 600,110L600,160C600,180 580,180 580,180L470,180C450,180 450,200 450,200L450,250C450,270 430,270 430,270L320,270C300,270 300,250 300,250L300,200C300,180 280,180 280,180L170,180C150,180 150,160 150,160L150,110C150,90 130,90 130,90L20,90C0,90 0,70 0,70L0,20C0,0 20,0 20,0Z" fill="#156e89"/>
+      <path filter="url(#noiseDk)" d="M0,0L130,0C150,0 150,0 170,0L280,0C300,0 300,0 320,0L430,0C450,0 450,0 470,0L580,0C600,0 600,0 620,0L730,0C750,0 750,20 750,20L750,70C750,90 730,90 730,90L620,90C600,90 600,110 600,110L600,160C600,180 580,180 580,180L470,180C450,180 450,200 450,200L450,250C450,270 430,270 430,270L320,270C300,270 300,250 300,250L300,200C300,180 280,180 280,180L170,180C150,180 150,160 150,160L150,110C150,90 130,90 130,90L20,90C0,90 0,70 0,70L0,20C0,0 20,0 20,0Z" fill="url(#gradDk)"/>
     </g>
 
     <!-- 3. blobMain — front layer -->
     <g class="piece" filter="url(#depthDither)" transform="translate(5, 130)">
-      <path d="M 150 45 L 150 20 Q 150 0 170 0 L 280 0 Q 300 0 320 0 L 430 0 Q 450 0 470 0 L 580 0 Q 600 0 600 20 L 600 70 Q 600 90 620 90 L 730 90 Q 750 90 750 110 L 750 160 Q 750 180 770 180 L 880 180 Q 900 180 900 200 L 900 250 Q 900 270 880 270 L 770 270 Q 750 270 750 290 L 750 340 Q 750 360 730 360 L 620 360 Q 600 360 580 360 L 470 360 Q 450 360 450 380 L 450 430 Q 450 450 430 450 L 320 450 Q 300 450 280 450 L 170 450 Q 150 450 150 430 L 150 380 Q 150 360 130 360 L 20 360 Q 0 360 0 340 L 0 290 Q 0 270 0 250 L 0 200 Q 0 180 0 160 L 0 110 Q 0 90 20 90 L 130 90 Q 150 90 150 70 Z" fill="#90cee0"/>
+      <path filter="url(#noiseMain)" d="M 150 45 L 150 20 Q 150 0 170 0 L 280 0 Q 300 0 320 0 L 430 0 Q 450 0 470 0 L 580 0 Q 600 0 600 20 L 600 70 Q 600 90 620 90 L 730 90 Q 750 90 750 110 L 750 160 Q 750 180 770 180 L 880 180 Q 900 180 900 200 L 900 250 Q 900 270 880 270 L 770 270 Q 750 270 750 290 L 750 340 Q 750 360 730 360 L 620 360 Q 600 360 580 360 L 470 360 Q 450 360 450 380 L 450 430 Q 450 450 430 450 L 320 450 Q 300 450 280 450 L 170 450 Q 150 450 150 430 L 150 380 Q 150 360 130 360 L 20 360 Q 0 360 0 340 L 0 290 Q 0 270 0 250 L 0 200 Q 0 180 0 160 L 0 110 Q 0 90 20 90 L 130 90 Q 150 90 150 70 Z" fill="url(#gradMain)"/>
     </g>
 
   </svg>
@@ -305,6 +350,48 @@
   <div class="ctrl-row">
     <label>Light opacity <span class="val" id="innerLtOpVal">0</span></label>
     <input type="range" id="innerLtOp" min="0" max="1" step="0.01" value="0">
+  </div>
+
+  <div class="section-label">Gradient</div>
+  <div class="ctrl-row">
+    <label>Grey light</label>
+    <input type="color" id="gradGreyLight" value="#4a4f60">
+  </div>
+  <div class="ctrl-row">
+    <label>Grey dark</label>
+    <input type="color" id="gradGreyDark" value="#333745">
+  </div>
+  <div class="ctrl-row">
+    <label>Dk light</label>
+    <input type="color" id="gradDkLight" value="#1f8fae">
+  </div>
+  <div class="ctrl-row">
+    <label>Dk dark</label>
+    <input type="color" id="gradDkDark" value="#156e89">
+  </div>
+  <div class="ctrl-row">
+    <label>Main light</label>
+    <input type="color" id="gradMainLight" value="#b8e2ee">
+  </div>
+  <div class="ctrl-row">
+    <label>Main dark</label>
+    <input type="color" id="gradMainDark" value="#90cee0">
+  </div>
+  <div class="ctrl-row">
+    <label>Center X <span class="val" id="gradCxVal">50</span></label>
+    <input type="range" id="gradCx" min="0" max="100" step="1" value="50">
+  </div>
+  <div class="ctrl-row">
+    <label>Center Y <span class="val" id="gradCyVal">-18</span></label>
+    <input type="range" id="gradCy" min="-50" max="100" step="1" value="-18">
+  </div>
+  <div class="ctrl-row">
+    <label>Radius X <span class="val" id="gradRxVal">74</span></label>
+    <input type="range" id="gradRx" min="10" max="150" step="1" value="74">
+  </div>
+  <div class="ctrl-row">
+    <label>Radius Y <span class="val" id="gradRyVal">118</span></label>
+    <input type="range" id="gradRy" min="10" max="200" step="1" value="118">
   </div>
 
   <div class="section-label">Background</div>
@@ -432,6 +519,57 @@
   bind('innerLtBlur', 'innerLtBlurVal', v => $('innerLightBlurNode').setAttribute('stdDeviation', v));
   bind('innerLtOp', 'innerLtOpVal', v => $('innerLightFloodNode').setAttribute('flood-opacity', v));
 
+  /* ── Gradient controls ── */
+  const grads = ['gradGrey', 'gradDk', 'gradMain'];
+
+  $('gradGreyLight').addEventListener('input', e => $('greyStop0').setAttribute('stop-color', e.target.value));
+  $('gradDkLight').addEventListener('input', e => $('dkStop0').setAttribute('stop-color', e.target.value));
+  $('gradMainLight').addEventListener('input', e => $('mainStop0').setAttribute('stop-color', e.target.value));
+
+  $('gradGreyDark').addEventListener('input', e => {
+    $('greyStop1').setAttribute('stop-color', e.target.value);
+    $('noiseGreyFlood').setAttribute('flood-color', e.target.value);
+  });
+  $('gradDkDark').addEventListener('input', e => {
+    $('dkStop1').setAttribute('stop-color', e.target.value);
+    $('noiseDkFlood').setAttribute('flood-color', e.target.value);
+  });
+  $('gradMainDark').addEventListener('input', e => {
+    $('mainStop1').setAttribute('stop-color', e.target.value);
+    $('noiseMainFlood').setAttribute('flood-color', e.target.value);
+  });
+
+  function updateGradGeometry() {
+    const cxPct = parseFloat($('gradCx').value);
+    const cyPct = parseFloat($('gradCy').value);
+    const rxPct = parseFloat($('gradRx').value);
+    const ryPct = parseFloat($('gradRy').value);
+    $('gradCxVal').textContent = cxPct;
+    $('gradCyVal').textContent = cyPct;
+    $('gradRxVal').textContent = rxPct;
+    $('gradRyVal').textContent = ryPct;
+    // Convert % to objectBoundingBox fractions
+    const cx = cxPct / 100;
+    const cy = cyPct / 100;
+    const r = ryPct / 100;
+    const scaleX = rxPct / ryPct;
+    grads.forEach(id => {
+      const el = $(id);
+      el.setAttribute('cx', cx);
+      el.setAttribute('cy', cy);
+      el.setAttribute('fx', cx);
+      el.setAttribute('fy', cy);
+      el.setAttribute('r', r);
+      el.setAttribute('gradientTransform',
+        `translate(${cx},${cy}) scale(${scaleX.toFixed(4)},1) translate(${-cx},${-cy})`);
+    });
+  }
+
+  $('gradCx').addEventListener('input', updateGradGeometry);
+  $('gradCy').addEventListener('input', updateGradGeometry);
+  $('gradRx').addEventListener('input', updateGradGeometry);
+  $('gradRy').addEventListener('input', updateGradGeometry);
+
   /* ── Background color ── */
   $('bgColor').addEventListener('input', (e) => {
     document.body.style.background = e.target.value;
@@ -452,6 +590,16 @@
       innerDarkOpacity: parseFloat($('innerDkOp').value),
       innerLightBlur: parseFloat($('innerLtBlur').value),
       innerLightOpacity: parseFloat($('innerLtOp').value),
+      gradGreyLight: $('gradGreyLight').value,
+      gradGreyDark: $('gradGreyDark').value,
+      gradDkLight: $('gradDkLight').value,
+      gradDkDark: $('gradDkDark').value,
+      gradMainLight: $('gradMainLight').value,
+      gradMainDark: $('gradMainDark').value,
+      gradCx: parseFloat($('gradCx').value),
+      gradCy: parseFloat($('gradCy').value),
+      gradRx: parseFloat($('gradRx').value),
+      gradRy: parseFloat($('gradRy').value),
       bgColor: $('bgColor').value
     };
     navigator.clipboard.writeText(JSON.stringify(settings, null, 2)).then(() => {

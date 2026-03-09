@@ -1,31 +1,30 @@
 import React from 'react';
 
-function DepthDitherFilter({
-  id = 'depthDither',
-  ditherIntensity = 0.24,
-  lightAngle = 41,
-  lightDist = 16,
-  outerBlur = 17,
-  outerOpacity = 0.28,
-  innerDarkBlur = 4.5,
-  innerDarkOpacity = 0.42,
-  innerLightBlur = 1,
-  innerLightOpacity = 0.39,
-}) {
-  const a = (lightAngle * Math.PI) / 180;
-  const outerDx = lightDist * Math.cos(a);
-  const outerDy = lightDist * Math.sin(a);
-  const innerDist = lightDist * 0.35;
-  // Inner dark: opposite to light (raised look)
-  const darkDx = -innerDist * Math.cos(a);
-  const darkDy = -innerDist * Math.sin(a);
-  // Inner light: toward light (raised look)
-  const lightDx = innerDist * 0.7 * Math.cos(a);
-  const lightDy = innerDist * 0.7 * Math.sin(a);
+function DepthDitherFilter({ id = 'depthDither' }) {
+  // Outer shadow: angle=229°, dist=10, depth=2.7
+  const outerAngle = 229 * Math.PI / 180;
+  const outerDx = (-10 * 2.7 * Math.cos(outerAngle)).toFixed(1);
+  const outerDy = (-10 * 2.7 * Math.sin(outerAngle)).toFixed(1);
+
+  // Inner shadow: angle=216°, dist=2, depth=3
+  const innerAngle = 216 * Math.PI / 180;
+  const innerDist = 2 * 3;
+  const darkDx = (innerDist * Math.cos(innerAngle)).toFixed(1);
+  const darkDy = (innerDist * Math.sin(innerAngle)).toFixed(1);
+  const lightDx = (-innerDist * 0.7 * Math.cos(innerAngle)).toFixed(1);
+  const lightDy = (-innerDist * 0.7 * Math.sin(innerAngle)).toFixed(1);
+
+  // Gradient geometry: cx=28%, cy=31%, rx=50%, ry=65%
+  const cx = 0.28;
+  const cy = 0.31;
+  const r = 0.65;
+  const scaleX = (50 / 65).toFixed(4);
+  const gradTransform = `translate(${cx},${cy}) scale(${scaleX},1) translate(${-cx},${-cy})`;
 
   return (
     <svg style={{ position: 'absolute', width: 0, height: 0 }}>
       <defs>
+        {/* Depth shadow filter */}
         <filter
           id={id}
           x="-30%"
@@ -35,57 +34,101 @@ function DepthDitherFilter({
           colorInterpolationFilters="sRGB"
         >
           {/* Outer shadow */}
-          <feGaussianBlur in="SourceAlpha" stdDeviation={outerBlur} result="outerBlur" />
-          <feOffset in="outerBlur" dx={outerDx.toFixed(1)} dy={outerDy.toFixed(1)} result="outerOffset" />
-          <feFlood floodColor="#000" floodOpacity={outerOpacity} result="outerColor" />
+          <feGaussianBlur in="SourceAlpha" stdDeviation="19.5" result="outerBlur" />
+          <feOffset in="outerBlur" dx={outerDx} dy={outerDy} result="outerOffset" />
+          <feFlood floodColor="#000" floodOpacity="0.26" result="outerColor" />
           <feComposite in="outerColor" in2="outerOffset" operator="in" result="outerDrop" />
-
-          {/* Shadow dither */}
-          <feTurbulence type="turbulence" baseFrequency="2.2" numOctaves="1" seed="7" result="shNoise" />
-          <feComponentTransfer in="shNoise" result="shDither">
-            <feFuncA type="discrete" tableValues="0 0.3 0.8 1 1 0.8 0.3 0" />
-          </feComponentTransfer>
-          <feComposite in="outerDrop" in2="shDither" operator="in" result="ditheredOuterDrop" />
 
           {/* Inner dark shadow */}
           <feComponentTransfer in="SourceAlpha" result="inv">
             <feFuncA type="table" tableValues="1 0" />
           </feComponentTransfer>
-          <feOffset dx={darkDx.toFixed(1)} dy={darkDy.toFixed(1)} in="inv" result="invOff" />
-          <feGaussianBlur in="invOff" stdDeviation={innerDarkBlur} result="invBlur" />
+          <feOffset dx={darkDx} dy={darkDy} in="inv" result="invOff" />
+          <feGaussianBlur in="invOff" stdDeviation="4.5" result="invBlur" />
           <feComposite in="invBlur" in2="SourceAlpha" operator="in" result="innerDark" />
-          <feFlood floodColor="#000" floodOpacity={innerDarkOpacity} result="dkColor" />
+          <feFlood floodColor="#000" floodOpacity="0.43" result="dkColor" />
           <feComposite in="dkColor" in2="innerDark" operator="in" result="innerDkShadow" />
 
           {/* Inner light highlight */}
           <feComponentTransfer in="SourceAlpha" result="inv2">
             <feFuncA type="table" tableValues="1 0" />
           </feComponentTransfer>
-          <feOffset dx={lightDx.toFixed(1)} dy={lightDy.toFixed(1)} in="inv2" result="invOff2" />
-          <feGaussianBlur in="invOff2" stdDeviation={innerLightBlur} result="invBlur2" />
+          <feOffset dx={lightDx} dy={lightDy} in="inv2" result="invOff2" />
+          <feGaussianBlur in="invOff2" stdDeviation="5" result="invBlur2" />
           <feComposite in="invBlur2" in2="SourceAlpha" operator="in" result="innerLight" />
-          <feFlood floodColor="#fff" floodOpacity={innerLightOpacity} result="ltColor" />
+          <feFlood floodColor="#fff" floodOpacity="0.03" result="ltColor" />
           <feComposite in="ltColor" in2="innerLight" operator="in" result="innerLtShadow" />
-
-          {/* Surface dither */}
-          <feTurbulence type="turbulence" baseFrequency="1.8" numOctaves="1" seed="2" result="surfNoise" />
-          <feComponentTransfer in="surfNoise" result="surfDither">
-            <feFuncR type="discrete" tableValues="0 0 0 1 1" />
-            <feFuncG type="discrete" tableValues="0 0 0 1 1" />
-            <feFuncB type="discrete" tableValues="0 0 0 1 1" />
-            <feFuncA type="linear" slope={ditherIntensity} intercept="0" />
-          </feComponentTransfer>
-          <feComposite in="surfDither" in2="SourceAlpha" operator="in" result="clippedDither" />
 
           {/* Merge layers */}
           <feMerge>
-            <feMergeNode in="ditheredOuterDrop" />
+            <feMergeNode in="outerDrop" />
             <feMergeNode in="SourceGraphic" />
             <feMergeNode in="innerDkShadow" />
             <feMergeNode in="innerLtShadow" />
-            <feMergeNode in="clippedDither" />
           </feMerge>
         </filter>
+
+        {/* Noise filters (per blob) */}
+        <filter id="noiseGrey" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise" />
+          <feComponentTransfer in="noise" result="thresholded">
+            <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1" />
+          </feComponentTransfer>
+          <feFlood floodColor="#333745" result="color" />
+          <feComposite in="color" in2="thresholded" operator="in" result="noiseTex" />
+          <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise" />
+          <feMerge>
+            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="clippedNoise" />
+          </feMerge>
+        </filter>
+
+        <filter id="noiseDk" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise" />
+          <feComponentTransfer in="noise" result="thresholded">
+            <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1" />
+          </feComponentTransfer>
+          <feFlood floodColor="#156e89" result="color" />
+          <feComposite in="color" in2="thresholded" operator="in" result="noiseTex" />
+          <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise" />
+          <feMerge>
+            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="clippedNoise" />
+          </feMerge>
+        </filter>
+
+        <filter id="noiseMain" x="0%" y="0%" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise" />
+          <feComponentTransfer in="noise" result="thresholded">
+            <feFuncA type="discrete" tableValues="0 0 0 0 1 1 1 1" />
+          </feComponentTransfer>
+          <feFlood floodColor="#90cee0" result="color" />
+          <feComposite in="color" in2="thresholded" operator="in" result="noiseTex" />
+          <feComposite in="noiseTex" in2="SourceGraphic" operator="in" result="clippedNoise" />
+          <feMerge>
+            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="clippedNoise" />
+          </feMerge>
+        </filter>
+
+        {/* Radial gradients (elliptical) */}
+        <radialGradient id="gradGrey" cx={cx} cy={cy} r={r} fx={cx} fy={cy}
+          gradientUnits="objectBoundingBox" gradientTransform={gradTransform}>
+          <stop offset="0%" stopColor="#4a4f60" />
+          <stop offset="100%" stopColor="#333745" />
+        </radialGradient>
+
+        <radialGradient id="gradDk" cx={cx} cy={cy} r={r} fx={cx} fy={cy}
+          gradientUnits="objectBoundingBox" gradientTransform={gradTransform}>
+          <stop offset="0%" stopColor="#1f8fae" />
+          <stop offset="100%" stopColor="#156e89" />
+        </radialGradient>
+
+        <radialGradient id="gradMain" cx={cx} cy={cy} r={r} fx={cx} fy={cy}
+          gradientUnits="objectBoundingBox" gradientTransform={gradTransform}>
+          <stop offset="0%" stopColor="#cfebf3" />
+          <stop offset="100%" stopColor="#90cee0" />
+        </radialGradient>
       </defs>
     </svg>
   );

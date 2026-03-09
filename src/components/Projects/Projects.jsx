@@ -9,24 +9,29 @@ import styles from './Projects.module.css';
 function Projects() {
   return (
     <>
-      <BlobDivider color="var(--color-accent-weak)" orientation="top" />
+          <MaxWidthWrapper>
+      <BlobDivider color="#90cee0" colorLight="#cfebf3" orientation="top" />
       <section id="projects" className={styles.projects}>
-        <MaxWidthWrapper>
-          <h2>Projets</h2>
-          <div className={styles.projectsGrid}>
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.slug}
-                name={project.name}
-                slug={project.slug}
-                description={project.shortDescription}
-                image={project.image}
-              />
-            ))}
-          </div>
-        </MaxWidthWrapper>
+        <svg className={styles.noiseBg} preserveAspectRatio="none">
+          <rect width="100%" height="100%" fill="url(#gradMain)" filter="url(#noiseMain)" />
+        </svg>
+        <div className={styles.content}>
+            <h2>Projets</h2>
+            <div className={styles.projectsGrid}>
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.slug}
+                  name={project.name}
+                  slug={project.slug}
+                  description={project.shortDescription}
+                  image={project.image}
+                />
+              ))}
+            </div>
+        </div>
       </section>
-      <BlobDivider color="var(--color-accent-weak)" orientation="bottom" />
+      <BlobDivider color="#90cee0" colorLight="#cfebf3" orientation="bottom" />
+          </MaxWidthWrapper>
     </>);
 }
 
