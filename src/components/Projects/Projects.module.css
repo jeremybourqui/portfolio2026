@@ -2,7 +2,7 @@
 
 .projects {
   padding: 24px 24px 64px 24px;
-  background-color: var(--color-accent-weak);
+
   color: var(--color-background);
   overflow: hidden;
 }

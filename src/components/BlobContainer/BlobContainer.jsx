@@ -1,12 +1,13 @@
 import { useId } from 'react';
 import { generateCombinedPath } from './generateBlobPath';
-import styles from '../BlobDivider/BlobDivider.module.css';
+import styles from './BlobContainer.module.css';
 
 function BlobContainer({
   color = '#90cee0',
   colorLight = '#cfebf3',
   middleHeight = 200,
   backgroundColor = 'var(--color-background)',
+  children
 }) {
   const uid = useId().replace(/:/g, '');
   const noiseId = `noise${uid}`;
@@ -29,14 +30,14 @@ function BlobContainer({
   const gradTransform = `translate(${cx},${cy}) scale(${scaleX},1) translate(${-cx},${-cy})`;
 
   return (
-    <svg
-      className={styles.blobDivider}
-      style={{ backgroundColor }}
-      viewBox={`0 0 ${totalWidth} ${totalH}`}
-      xmlns="http://www.w3.org/2000/svg"
-      overflow="visible"
-    >
-      <defs>
+    <div className={styles.container} style={{ backgroundColor, aspectRatio: `${totalWidth} / ${totalH}` }}>
+      <svg
+        className={styles.svg}
+        viewBox={`0 0 ${totalWidth} ${totalH}`}
+        preserveAspectRatio="none"
+        overflow="visible"
+      >
+        <defs>
         <filter id={noiseId} x="0%" y="0%" width="100%" height="100%">
           <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="5" stitchTiles="stitch" result="noise" />
           <feComponentTransfer in="noise" result="thresholded">
@@ -66,6 +67,10 @@ function BlobContainer({
         />
       </g>
     </svg>
+    <div className={styles.content}>
+      {children}
+    </div>
+  </div>
   );
 }
 

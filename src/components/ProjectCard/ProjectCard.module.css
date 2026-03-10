@@ -9,8 +9,8 @@
   padding: var(--padding);
   background-color: var(--color-background-strong);
   color: var(--color-background);
-  flex: 0 0 330px;
-  min-width: 330px;
+  flex: 0 0 300px;
+  min-width: 300px;
   scroll-snap-align: center;
 }
 

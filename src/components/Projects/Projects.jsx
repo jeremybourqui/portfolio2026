@@ -1,7 +1,7 @@
 import React from 'react';
 import ProjectCard from '../ProjectCard';
 import MaxWidthWrapper from '../MaxWidthWrapper';
-import BlobDivider from '../BlobDivider';
+import BlobContainer from '../BlobContainer';
 import projects from '../../data/projects';
 
 import styles from './Projects.module.css';
@@ -10,7 +10,7 @@ function Projects() {
   return (
     <>
       <MaxWidthWrapper>
-        <BlobDivider color="#90cee0" colorLight="#cfebf3" orientation="top" />
+        <BlobContainer middleHeight={900}>
         <section id="projects" className={styles.projects}>
           <h2>Projets</h2>
           <div className={styles.projectsGrid}>
@@ -25,7 +25,7 @@ function Projects() {
             ))}
           </div>
         </section>
-        <BlobDivider color="#90cee0" colorLight="#cfebf3" orientation="bottom" />
+        </BlobContainer>
       </MaxWidthWrapper>
     </>);
 }

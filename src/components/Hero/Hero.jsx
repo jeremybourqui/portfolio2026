@@ -9,6 +9,15 @@ function Hero() {
         <div className={styles.hero}>
           <div className={styles.blobContainer}>
             <svg className={styles.blob} viewBox="0 0 1190 540" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="constructionStripes" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect width="14" height="28" fill="#FFC107" />
+                  <rect x="14" width="14" height="28" fill="#1a1a1a" />
+                </pattern>
+                <filter id="bannerShadow" x="-10%" y="-20%" width="120%" height="140%">
+                  <feDropShadow dx="5" dy="6" stdDeviation="5" floodColor="#000" floodOpacity="0.45" />
+                </filter>
+              </defs>
               <g className={styles.blobGrey}>
                 <path filter="url(#noiseGrey)" d="M 280 45 L 280 26 Q 280 0 300 0 L 400 0 Q 420 0 420 26 L 420 64 Q 420 90 440 90 L 540 90 Q 560 90 580 90 L 680 90 Q 700 90 700 116 L 700 154 Q 700 180 680 180 L 580 180 Q 560 180 560 206 L 560 244 Q 560 270 540 270 L 440 270 Q 420 270 400 270 L 300 270 Q 280 270 260 270 L 160 270 Q 140 270 120 270 L 20 270 Q 0 270 0 244 L 0 206 Q 0 180 0 154 L 0 116 Q 0 90 20 90 L 120 90 Q 140 90 160 90 L 260 90 Q 280 90 280 64 Z" fill="url(#gradGrey)" />
               </g>
@@ -17,6 +26,15 @@ function Hero() {
               </g>
               <g className={styles.blobMain}>
                 <path filter="url(#noiseMain)" d="M 150 45 L 150 20 Q 150 0 170 0 L 280 0 Q 300 0 320 0 L 430 0 Q 450 0 470 0 L 580 0 Q 600 0 600 20 L 600 70 Q 600 90 620 90 L 730 90 Q 750 90 750 110 L 750 160 Q 750 180 770 180 L 880 180 Q 900 180 900 200 L 900 250 Q 900 270 880 270 L 770 270 Q 750 270 750 290 L 750 340 Q 750 360 730 360 L 620 360 Q 600 360 580 360 L 470 360 Q 450 360 450 380 L 450 430 Q 450 450 430 450 L 320 450 Q 300 450 280 450 L 170 450 Q 150 450 150 430 L 150 380 Q 150 360 130 360 L 20 360 Q 0 360 0 340 L 0 290 Q 0 270 0 250 L 0 200 Q 0 180 0 160 L 0 110 Q 0 90 20 90 L 130 90 Q 150 90 150 70 Z" fill="url(#gradMain)" />
+              </g>
+              {/* Construction banner */}
+              <g transform="rotate(-12, -800, -500)" filter="url(#bannerShadow)">
+                <rect x="-150" y="248" width="500" height="40" fill="url(#constructionStripes)" />
+                <rect x="-45" y="256" width="280" height="25" rx="4" fill="#FFC107" />
+                <text x="100" y="270" textAnchor="middle" dominantBaseline="middle"
+                  fontSize="18" fontWeight="900" fill="#1a1a1a"
+                  fontFamily="'Arial Black', 'Helvetica', sans-serif"
+                  letterSpacing="3">EN CONSTRUCTION</text>
               </g>
             </svg>
             <div className={styles.textContent}>

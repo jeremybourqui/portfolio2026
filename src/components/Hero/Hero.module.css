@@ -3,6 +3,7 @@
 .heroSection {
     background-color: var(--color-background);
     margin: 0 auto;
+    padding-bottom: 20px;
 }
 
 .hero {
@@ -10,6 +11,7 @@
     aspect-ratio: 5/2;
     min-width: 768px;
     container-type: inline-size;
+    overflow: visible;
     margin: 0 auto;
     @media screen and (max-width: 768px) {
         left: 60%;
