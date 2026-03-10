@@ -1,18 +1,58 @@
-# React + Vite
+# Portfolio 2026
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal professional portfolio built with React and Vite, showcasing my projects and web development skills.
 
-Currently, two official plugins are available:
+## Technologies
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 19** - UI framework
+- **Vite 7** - Build tool and dev server
+- **React Router** - Navigation and routing (SPA)
+- **Three.js / React Three Fiber** - 3D and visual effects
+- **Embla Carousel** - Image carousel
+- **CSS Modules** - Component-scoped styles
 
-## React Compiler
+## Project Structure
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+```
+src/
+├── components/       # Reusable components
+│   ├── Header/       # Main navigation
+│   ├── Hero/         # Landing section
+│   ├── Projects/     # Project grid
+│   ├── Skills/       # Technical skills
+│   ├── Contact/      # Contact section
+│   ├── ContactForm/  # Contact form
+│   ├── Footer/       # Page footer
+│   ├── ProjectCard/  # Individual project card
+│   ├── EmblaCarousel/ # Image carousel
+│   ├── BlobDivider/  # SVG visual divider
+│   └── SvgFilters/   # SVG filters (dither, etc.)
+├── pages/            # Application pages
+│   ├── Home/         # Home page
+│   └── ProjectDetail/ # Project detail page
+├── data/             # Project data
+├── assets/           # Images and resources
+└── styles/           # Global styles and CSS variables
+```
 
-Note: This will impact Vite dev & build performances.
+## Installation
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Commands
+
+```bash
+# Development server
+npm run dev
+
+# Production build
+npm run build
+
+# Preview build
+npm run preview
+
+# Linting
+npm run lint
+```

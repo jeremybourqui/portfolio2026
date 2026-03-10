@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ContactForm.module.css';
+const formUrl = import.meta.env.VITE_FORM_KEY;
 
 function ContactForm() {
   const [status, setStatus] = useState('');
@@ -11,7 +12,7 @@ function ContactForm() {
     const form = e.target;
     const formData = new FormData(form);
 
-    const response = await fetch('https://formspree.io/f/xaqqnrve', {
+    const response = await fetch(formUrl, {
       method: 'POST',
       body: formData,
       headers: {
