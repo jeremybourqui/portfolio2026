@@ -1,8 +1,9 @@
 # Portfolio 2026
 
-Personal professional portfolio built with React and Vite, showcasing my projects and web development skills.
+Personal professional portfolio built with React and Vite, showcasing my projects and skills.
 
-[portfolio.jeremybourqui.ch]
+Link :
+[https://portfolio.jeremybourqui.ch](https://portfolio.jeremybourqui.ch)
 
 ## Technologies
 
