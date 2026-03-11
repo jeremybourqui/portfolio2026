@@ -2,6 +2,8 @@
 
 Personal professional portfolio built with React and Vite, showcasing my projects and web development skills.
 
+[portfolio.jeremybourqui.ch]
+
 ## Technologies
 
 - **React 19** - UI framework
