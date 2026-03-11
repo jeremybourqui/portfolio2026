@@ -7,7 +7,6 @@ Personal professional portfolio built with React and Vite, showcasing my project
 - **React 19** - UI framework
 - **Vite 7** - Build tool and dev server
 - **React Router** - Navigation and routing (SPA)
-- **Three.js / React Three Fiber** - 3D and visual effects
 - **Embla Carousel** - Image carousel
 - **CSS Modules** - Component-scoped styles
 

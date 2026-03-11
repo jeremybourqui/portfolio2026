@@ -11,7 +11,7 @@ import { IoIosMail } from "react-icons/io";
 function Contact() {
   const info = [
     { icon: IoIosMail, name: 'jeremy@jeremybourqui.ch', href: 'mailto:jeremy@jeremybourqui.ch' },
-    { icon: FaLinkedin, name: 'Linkedin', href: 'www.linkedin.com/in/jeremy-bourqui-972346146' },
+    { icon: FaLinkedin, name: 'Linkedin', href: 'https://www.linkedin.com/in/jeremy-bourqui-972346146' },
     { icon: FaGithub, name: 'GitHub', href: 'https://github.com/jeremybourqui/' },
     { icon: FaBehance, name: 'Behance', href: 'https://www.behance.net/jeremybourqui' },  
   ];

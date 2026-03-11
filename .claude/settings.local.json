@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find '/c/Users/BoJe/OneDrive - Orif - Section Informatique/Projet_Personnel/portfolio2026' -maxdepth 2 -type f -name LICENSE* -o -name README* -o -name CLAUDE*)",
+      "Bash(git -C \"/c/Users/BoJe/OneDrive - Orif - Section Informatique/Projet_Personnel/portfolio2026\" log --oneline -20)"
+    ]
+  }
+}
