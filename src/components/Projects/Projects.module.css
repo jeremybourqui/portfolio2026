@@ -10,8 +10,7 @@
 .projectsGrid {
   display: flex;
   gap: 32px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: visible;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 16px; /* space for scrollbar or thumb */
