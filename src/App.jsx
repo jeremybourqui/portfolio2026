@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import ProjectDetail from './pages/ProjectDetail';
@@ -6,7 +7,7 @@ import DepthDitherFilter from './components/SvgFilters/DepthDitherFilter';
 
 function App() {
 
-  React.useEffect(() => {
+  useEffect(() => {
    var _mtm = window._mtm = window._mtm || [];
    _mtm.push({'mtm.startTime': (new Date().getTime()), 'event': 'mtm.Start'});
    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
